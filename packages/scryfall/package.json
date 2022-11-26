@@ -1,3 +1,7 @@
 {
-    "name": "@hmhealey/scryfall"
+    "name": "@hmhealey/scryfall",
+    "devDependencies": {
+        "jest": "^29.3.1",
+        "ts-jest": "^29.0.3"
+    }
 }
