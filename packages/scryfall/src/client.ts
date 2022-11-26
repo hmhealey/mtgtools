@@ -234,7 +234,7 @@ export default class ScryfallClient {
             params.push(`${key}=${encodeURIComponent(value)}`);
         }
 
-        return params.length > 0 ? `=${params.join('&')}` : '';
+        return params.length > 0 ? `?${params.join('&')}` : '';
     }
 
     private async doFetch<T>(path: string, fetchOptions?: RequestInit) {
