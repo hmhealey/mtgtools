@@ -1,0 +1,10 @@
+{
+  "editor.formatOnSave": true,
+  "search.exclude": {
+    "**/.pnp.js": true,
+    "**/.yarn": true,
+    "**/.pnp.*": true
+  },
+  "typescript.tsdk": ".yarn/sdks/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
+}
