@@ -1,6 +1,7 @@
 import {ScryfallDate, UUID, URI} from './scryfall';
 
 export type Set = {
+    object: 'set';
     id: UUID;
     code: string;
     mtgo_code?: string;
@@ -21,6 +22,10 @@ export type Set = {
     icon_svg_uri: URI;
     search_uri: URI;
 };
+
+export function isSet(o: unknown): o is Set {
+    return Boolean(o && typeof o === 'object' && (o as any).object === 'set');
+}
 
 export enum SetType {
     Core = 'core',

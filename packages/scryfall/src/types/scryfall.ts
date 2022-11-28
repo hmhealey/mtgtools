@@ -5,6 +5,10 @@ export type Catalog = {
     data: string[];
 };
 
+export function isCatalog(o: unknown): o is Catalog {
+    return Boolean(o && typeof o === 'object' && (o as any).object === 'catalog');
+}
+
 export type List<T, NotFoundType = never> = {
     object: 'list';
     data: T[];
@@ -14,6 +18,10 @@ export type List<T, NotFoundType = never> = {
     total_card?: string;
     warnings: string[];
 };
+
+export function isList(o: unknown): o is List<unknown> {
+    return Boolean(o && typeof o === 'object' && (o as any).object === 'list');
+}
 
 export type ScryfallDate = string; // string of the form `yyyy-mm-dd`
 

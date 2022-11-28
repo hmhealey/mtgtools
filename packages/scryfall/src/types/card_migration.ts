@@ -8,3 +8,7 @@ export type CardMigration = {
     old_scryfall_id: UUID;
     node?: string;
 } & {migration_strategy: 'merge'; new_scryfall_id: UUID} & {migration_strategy: 'delete'};
+
+export function isCardMigration(o: unknown): o is CardMigration {
+    return Boolean(o && typeof o === 'object' && (o as any).object === 'migration');
+}

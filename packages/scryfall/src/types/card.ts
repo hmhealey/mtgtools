@@ -101,6 +101,10 @@ export type Card = {
     };
 };
 
+export function isCard(o: unknown): o is Card {
+    return Boolean(o && typeof o === 'object' && (o as any).object === 'card');
+}
+
 type CardWithLayout<Layout, RequiredFields extends keyof Card> = Card &
     Required<Pick<Card, RequiredFields>> & {layout: Layout};
 
@@ -133,6 +137,10 @@ export type CardFace = {
     type_line?: string;
     watermark?: string;
 };
+
+export function isCardFace(o: unknown): o is CardFace {
+    return Boolean(o && typeof o === 'object' && (o as any).object === 'card_face');
+}
 
 export type CardPrices = {
     usd: string;
@@ -263,10 +271,6 @@ export type RelatedCard = {
     uri: URI;
 };
 
-export type Ruling = {
-    object: 'ruling';
-    oracle_id: UUID;
-    source: 'wotc' | 'scryfall';
-    published_at: ScryfallDate;
-    comment: string;
-};
+export function isRelatedCard(o: unknown): o is RelatedCard {
+    return Boolean(o && typeof o === 'object' && (o as any).object === 'related_card');
+}

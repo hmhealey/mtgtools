@@ -13,3 +13,7 @@ export type BulkData = {
     content_type: string;
     content_encoding: string;
 };
+
+export function isBulkData(o: unknown): o is BulkData {
+    return Boolean(o && typeof o === 'object' && (o as any).object === 'bulk_data');
+}
