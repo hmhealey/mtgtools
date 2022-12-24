@@ -119,11 +119,11 @@ describe('ScryfallClient', () => {
             test('with a query', async () => {
                 const client = new ScryfallClient();
 
-                const response = await client.getRandomCard('mv=4 colors=bg');
+                const response = await client.getRandomCard('mv=4 t:creature colors=bg');
 
                 expect(response).toContainCard();
                 expect(response.data.cmc).toBe(4);
-                expect(response.data.colors).toEqual([Color.Black, Color.Green]);
+                expect(response.data.type_line).toContain('Creature');
             });
         });
 
