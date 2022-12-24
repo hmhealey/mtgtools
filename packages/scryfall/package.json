@@ -1,7 +1,7 @@
 {
     "name": "@hmhealey/scryfall",
     "scripts": {
-        "test": "jest --verbose --runInBand"
+        "test": "jest --verbose"
     },
     "devDependencies": {
         "@types/jest": "^29.2.3",
