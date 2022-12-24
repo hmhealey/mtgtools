@@ -1,6 +1,6 @@
 import {ScryfallDate, UUID, URI} from './scryfall';
 
-export type Set = {
+export type ScryfallSet = {
     object: 'set';
     id: UUID;
     code: string;
@@ -23,7 +23,7 @@ export type Set = {
     search_uri: URI;
 };
 
-export function isSet(o: unknown): o is Set {
+export function isScryfallSet(o: unknown): o is ScryfallSet {
     return Boolean(o && typeof o === 'object' && (o as any).object === 'set');
 }
 

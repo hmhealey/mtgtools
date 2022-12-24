@@ -4,8 +4,8 @@ import {CardMigration} from './types/card_migration';
 import {CardSymbol} from './types/card_symbol';
 import {ManaCost} from './types/mana_cost';
 import {Ruling} from './types/ruling';
-import {Catalog, List, ScryfallError, UUID} from './types/scryfall';
-import {Set} from './types/set';
+import {Catalog, List, ScryfallError, ScryfallResponse, UUID} from './types/scryfall';
+import {ScryfallSet} from './types/set';
 
 export default class ScryfallClient {
     private apiRoot = 'https://api.scryfall.com';
@@ -13,19 +13,19 @@ export default class ScryfallClient {
     // Sets
 
     getAllSets() {
-        return this.doFetch<List<Set>>('/sets');
+        return this.doFetch<List<ScryfallSet>>('/sets');
     }
 
     getSetByCode(code: string) {
-        return this.doFetch<Set>(`/sets/${code}`);
+        return this.doFetch<ScryfallSet>(`/sets/${code}`);
     }
 
-    getSetByTcgplayerId(id: string) {
-        return this.doFetch<Set>(`/sets/tcgplayer/${id}`);
+    getSetByTcgplayerId(id: number) {
+        return this.doFetch<ScryfallSet>(`/sets/tcgplayer/${id}`);
     }
 
     getSetById(id: string) {
-        return this.doFetch<Set>(`/sets/${id}`);
+        return this.doFetch<ScryfallSet>(`/sets/${id}`);
     }
 
     // Cards
@@ -58,13 +58,16 @@ export default class ScryfallClient {
         const queryString = this.makeQueryString({
             q: query,
         });
-        return this.doFetch<Catalog>(`/cards/random${queryString}`);
+        return this.doFetch<Card>(`/cards/random${queryString}`);
     }
 
     getCardCollection(identifiers: CardIdentifier[]) {
         return this.doFetch<List<Card, CardIdentifier>>('/cards/collection', {
             method: 'POST',
-            body: JSON.stringify(identifiers),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({identifiers}),
         });
     }
 
@@ -95,7 +98,7 @@ export default class ScryfallClient {
         return this.doFetch<Card>(`/cards/tcgplayer/${id}`);
     }
 
-    getCardByCardmarket(id: number) {
+    getCardByCardmarketId(id: number) {
         return this.doFetch<Card>(`/cards/cardmarket/${id}`);
     }
 
@@ -231,22 +234,28 @@ export default class ScryfallClient {
         const params: string[] = [];
 
         for (const [key, value] of Object.entries(options)) {
+            if (value === undefined) {
+                continue;
+            }
+
             params.push(`${key}=${encodeURIComponent(value)}`);
         }
 
         return params.length > 0 ? `?${params.join('&')}` : '';
     }
 
-    private async doFetch<T>(path: string, fetchOptions?: RequestInit) {
+    private async doFetch<T>(path: string, fetchOptions?: RequestInit): Promise<ScryfallResponse<T>> {
         const response = await fetch(this.apiRoot + path, fetchOptions);
         const responseJson = await response.json();
 
         if (response.ok) {
             return {
                 data: responseJson as T,
+                error: undefined,
             };
         } else {
             return {
+                data: undefined,
                 error: responseJson as ScryfallError,
             };
         }

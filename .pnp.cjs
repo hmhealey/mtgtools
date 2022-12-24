@@ -860,6 +860,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/scryfall/",\
           "packageDependencies": [\
             ["@hmhealey/scryfall", "workspace:packages/scryfall"],\
+            ["@types/jest", "npm:29.2.3"],\
+            ["expect", "npm:29.3.1"],\
             ["jest", "virtual:47d64724722055fb79b7792259078247ad08df7939aa7af4afacbbb7953e334d2c8da266cb37cc18ad9c02e76dd8ab31ef045698db9fd94923086779ef3acded#npm:29.3.1"],\
             ["ts-jest", "virtual:47d64724722055fb79b7792259078247ad08df7939aa7af4afacbbb7953e334d2c8da266cb37cc18ad9c02e76dd8ab31ef045698db9fd94923086779ef3acded#npm:29.0.3"]\
           ],\
@@ -4280,7 +4282,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/babel-jest", null],\
             ["@types/babel__core", null],\
             ["@types/esbuild", null],\
-            ["@types/jest", null],\
+            ["@types/jest", "npm:29.2.3"],\
             ["@types/jest__types", null],\
             ["@types/typescript", null],\
             ["babel-jest", null],\
