@@ -9,7 +9,7 @@ export type BulkData = {
     description: string;
     download_uri: URI;
     updated_at: string;
-    compressed_size: number;
+    size: number;
     content_type: string;
     content_encoding: string;
 };

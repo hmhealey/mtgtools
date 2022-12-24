@@ -6,8 +6,10 @@ export type CardMigration = {
     uri: URI;
     performed_at: ScryfallDate;
     old_scryfall_id: UUID;
-    node?: string;
-} & {migration_strategy: 'merge'; new_scryfall_id: UUID} & {migration_strategy: 'delete'};
+    new_scryfall_id?: UUID;
+    note?: string;
+    migration_strategy: 'merge' | 'delete';
+};
 
 export function isCardMigration(o: unknown): o is CardMigration {
     return Boolean(o && typeof o === 'object' && (o as any).object === 'migration');

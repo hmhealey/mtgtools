@@ -124,7 +124,7 @@ export default class ScryfallClient {
         return this.doFetch<List<Ruling>>(`/cards/${setCode}/${collectorNumber}/rulings`);
     }
 
-    getRulingsById(id: number) {
+    getRulingsById(id: string) {
         return this.doFetch<List<Ruling>>(`/cards/${id}/rulings`);
     }
 
@@ -157,7 +157,7 @@ export default class ScryfallClient {
     }
 
     getAllPlaneswalkerTypes() {
-        return this.doFetch<Catalog>('/catalog/palneswalker-types');
+        return this.doFetch<Catalog>('/catalog/planeswalker-types');
     }
 
     getAllLandTypes() {
@@ -211,11 +211,11 @@ export default class ScryfallClient {
     }
 
     getBulkDataById(id: UUID) {
-        return this.doFetch<List<BulkData>>(`/bulk-data/${id}`);
+        return this.doFetch<BulkData>(`/bulk-data/${id}`);
     }
 
     getBulkDataByType(type: string) {
-        return this.doFetch<List<BulkData>>(`/bulk-data/${type}`);
+        return this.doFetch<BulkData>(`/bulk-data/${type}`);
     }
 
     // Card Migrations
@@ -224,7 +224,7 @@ export default class ScryfallClient {
         return this.doFetch<List<CardMigration>>(`/migrations?page=${page}`);
     }
 
-    getCardMigrationByid(id: string) {
+    getCardMigrationById(id: string) {
         return this.doFetch<CardMigration>(`/migrations/${id}`);
     }
 

@@ -1,12 +1,25 @@
 import type {MatcherFunction} from 'expect';
 
 import ScryfallClient from './client';
+
+import {isBulkData} from './types/bulk_data';
 import {isCard} from './types/card';
+import {isCardMigration} from './types/card_migration';
+import {isCardSymbol} from './types/card_symbol';
 import {Color} from './types/color';
+import {isManaCost} from './types/mana_cost';
+import {isRuling} from './types/ruling';
 import {isCatalog, isErrorResponse, isList, isScryfallError, isSuccessResponse} from './types/scryfall';
 import {isScryfallSet} from './types/set';
 
 describe('ScryfallClient', () => {
+    beforeEach(() => {
+        // Add a short delay between tests to avoid getting rate limited
+        return new Promise((resolve) => {
+            setTimeout(resolve, 50);
+        });
+    });
+
     test('errors should be returned as a ScryfallError', async () => {
         const client = new ScryfallClient();
 
@@ -206,34 +219,286 @@ describe('ScryfallClient', () => {
     });
 
     describe('Rulings', () => {
-        // TODO
+        test('getRulingsByMultiverseId', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getRulingsByMultiverseId(3255);
+
+            expect(response).toContainListOf(isRuling);
+            expect(response.data.data[0].comment.startsWith('The ability is a mana ability')).toBe(true);
+        });
+
+        test('getRulingsByMtgoId', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getRulingsByMtgoId(57934);
+
+            expect(response).toContainListOf(isRuling);
+            expect(response.data.data[0].comment.startsWith('You choose the mode as the triggered')).toBe(true);
+        });
+
+        test('getRulingsByArenaId', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getRulingsByArenaId(67462);
+
+            expect(response).toContainListOf(isRuling);
+            expect(response.data.data[0].comment.startsWith('Each of Song of Freyalise’s')).toBe(true);
+        });
+
+        test('getRulingsBySetAndCollectorNumber', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getRulingsBySetAndCollectorNumber('ima', '65');
+
+            expect(response).toContainListOf(isRuling);
+            expect(response.data.data[0].comment.startsWith('If the target spell is an illegal target')).toBe(true);
+        });
+
+        test('getRulingsById', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getRulingsById('f2b9983e-20d4-4d12-9e2c-ec6d9a345787');
+
+            expect(response).toContainListOf(isRuling);
+            expect(response.data.data[0].comment.startsWith('It must flip like a coin')).toBe(true);
+        });
     });
 
     describe('Card Symbols', () => {
-        // TODO
+        test('getAllCardSymbols', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getAllCardSymbols();
+
+            expect(response).toContainListOf(isCardSymbol);
+        });
+
+        test('parseManaCost', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.parseManaCost('RUx');
+
+            expect(response.data).toBeDefined();
+            expect(isManaCost(response.data)).toBe(true);
+            expect(response.data.cost).toBe('{X}{U}{R}');
+        });
     });
 
     describe('Catalogs', () => {
-        // TODO
+        test('getAllCardNames', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getAllCardNames();
+
+            expect(response).toContainCatalog();
+            expect(response.data.data).toContain('"Ach! Hans, Run!"');
+        });
+
+        test('getAllArtistNames', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getAllArtistNames();
+
+            expect(response).toContainCatalog();
+            expect(response.data.data).toContain('Alayna Danner');
+        });
+
+        test('getWordBank', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getWordBank();
+
+            expect(response).toContainCatalog();
+            expect(response.data.data).toContain('ass');
+        });
+
+        test('getAllCreatureTypes', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getAllCreatureTypes();
+
+            expect(response).toContainCatalog();
+            expect(response.data.data).toContain('Faerie');
+        });
+
+        test('getAllPlaneswalkerTypes', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getAllPlaneswalkerTypes();
+
+            expect(response).toContainCatalog();
+            expect(response.data.data).toContain('Tamiyo');
+        });
+
+        test('getAllLandTypes', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getAllLandTypes();
+
+            expect(response).toContainCatalog();
+            expect(response.data.data).toContain("Urza's");
+        });
+
+        test('getAllArtifactTypes', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getAllArtifactTypes();
+
+            expect(response).toContainCatalog();
+            expect(response.data.data).toContain('Vehicle');
+        });
+
+        test('getAllEnchantmentTypes', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getAllEnchantmentTypes();
+
+            expect(response).toContainCatalog();
+            expect(response.data.data).toContain('Cartouche');
+        });
+
+        test('getAllSpellTypes', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getAllSpellTypes();
+
+            expect(response).toContainCatalog();
+            expect(response.data.data).toContain('Trap');
+        });
+
+        test('getAllPowers', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getAllPowers();
+
+            expect(response).toContainCatalog();
+            expect(response.data.data).toContain('∞');
+        });
+
+        test('getAllToughnesses', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getAllToughnesses();
+
+            expect(response).toContainCatalog();
+            expect(response.data.data).toContain('7-*');
+        });
+
+        test('getAllLoyalties', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getAllLoyalties();
+
+            expect(response).toContainCatalog();
+            expect(response.data.data).toContain('1d4+1');
+        });
+
+        test('getAllWatermarks', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getAllWatermarks();
+
+            expect(response).toContainCatalog();
+            expect(response.data.data).toContain('agentsofsneak');
+        });
+
+        test('getAllKeywordAbilities', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getAllKeywordAbilities();
+
+            expect(response).toContainCatalog();
+            expect(response.data.data).toContain('Gravestorm');
+        });
+
+        test('getAllKeywordActions', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getAllKeywordActions();
+
+            expect(response).toContainCatalog();
+            expect(response.data.data).toContain('Meld');
+        });
+
+        test('getAllAbilityWords', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getAllAbilityWords();
+
+            expect(response).toContainCatalog();
+            expect(response.data.data).toContain('Landfall');
+        });
     });
 
     describe('Bulk Data', () => {
-        // TODO
+        test('getAllBulkData', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getAllBulkData();
+
+            expect(response).toContainListOf(isBulkData);
+        });
+
+        test('getBulkDataById', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getBulkDataById('922288cb-4bef-45e1-bb30-0c2bd3d3534f');
+
+            expect(response.data).toBeDefined();
+            expect(isBulkData(response.data)).toBe(true);
+            expect(response.data.type).toBe('all_cards');
+        });
+
+        test('getBulkDataByType', async () => {
+            const client = new ScryfallClient();
+
+            const response = await client.getBulkDataByType('oracle-cards');
+
+            expect(response.data).toBeDefined();
+            expect(isBulkData(response.data)).toBe(true);
+            expect(response.data.type).toBe('oracle_cards');
+        });
     });
 
     describe('Card Migrations', () => {
-        // TODO
-    });
+        test('getCardMigrations', async () => {
+            const client = new ScryfallClient();
 
-    // ---
+            const response = await client.getCardMigrations(1);
 
-    test('asdf', async () => {
-        const client = new ScryfallClient();
+            console.log(response.data.data[0]);
+            console.log(isCardMigration(response.data.data[0]));
 
-        const response = await client.getAllSets();
+            expect(response).toContainListOf(isCardMigration);
+            // expect(response.data.next_page).toBe('https://api.scryfall.com/migrations?page=2');
+        });
 
-        expect(response.data).toBeDefined();
-        expect(response.error).not.toBeDefined();
+        describe('getCardMigrationById', () => {
+            test('merge', async () => {
+                const client = new ScryfallClient();
+
+                const response = await client.getCardMigrationById('6697b38a-ee19-455c-b24b-d0a659782d8b');
+
+                expect(response.data).toBeDefined();
+                expect(isCardMigration(response.data)).toBe(true);
+                expect(response.data.note).toBe('Un-rebalanced on Arena');
+                expect(response.data.migration_strategy).toBe('merge');
+                expect(response.data.new_scryfall_id).toBeDefined();
+            });
+
+            test('delete', async () => {
+                const client = new ScryfallClient();
+
+                const response = await client.getCardMigrationById('01666b16-5dbc-4d31-913d-7f5f2f67ea39');
+
+                expect(response.data).toBeDefined();
+                expect(isCardMigration(response.data)).toBe(true);
+                expect(response.data.note).toBe("Mistakenly imported, doesn't really exist");
+                expect(response.data.migration_strategy).toBe('delete');
+                expect(response.data.new_scryfall_id).not.toBeDefined();
+            });
+        });
     });
 });
 
@@ -268,11 +533,30 @@ const toContainListOf: MatcherFunction<[(o: unknown) => o is any]> = function <T
     actual: any,
     isType: (o: unknown) => o is T,
 ) {
-    const pass = isSuccessResponse(actual) && isList(actual.data) && isType(actual.data.data[0]);
+    if (!isSuccessResponse(actual)) {
+        return {
+            message: () => `expect object with keys ${Object.keys(actual)} to be a success response`,
+            pass: false,
+        };
+    }
+
+    if (!isList(actual.data)) {
+        return {
+            message: () => `expect object with keys ${Object.keys(actual.data)} to be a list`,
+            pass: false,
+        };
+    }
+
+    if (!isType(actual.data.data[0])) {
+        return {
+            message: () => `expect object with keys ${Object.keys(actual.data)} to be of the given type`,
+            pass: false,
+        };
+    }
 
     return {
-        message: () => `expected ${JSON.stringify(actual)} to be a list of the given type`,
-        pass,
+        message: () => '',
+        pass: true,
     };
 };
 
