@@ -1,0 +1,3 @@
+## June 18, 2023
+
+- `react-scripts` doesn't support TypeScript 5 (https://github.com/facebook/create-react-app/issues/13080). It seems to work fine, but it causes a peer dependency warning and some seemingly-harmless errors logged when first running `yarn start`. I added to the `logFilters` in `.yarnrc.yml` to hide the peer dependency warning because I wasn't able to fix it with `packageExtensions`, but I wasn't able to hide the `yarn start` errors.

@@ -5,8 +5,10 @@
     "license": "ISC",
     "private": true,
     "scripts": {
-        "clean": "rm -rf .yarn/cache .yarn/unplugged .yarn/install-state.gz && yarn workspaces foreach run clean",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "build": "yarn workspaces foreach run build",
+        "clean": "yarn workspaces foreach run clean && rm -rf .yarn/cache .yarn/unplugged .yarn/install-state.gz",
+        "start": "yarn workspace app start",
+        "test": "yarn workspaces foreach run test"
     },
     "workspaces": [
         "app",
