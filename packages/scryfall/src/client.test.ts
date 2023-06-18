@@ -6,7 +6,6 @@ import {isBulkData} from './types/bulk_data';
 import {isCard} from './types/card';
 import {isCardMigration} from './types/card_migration';
 import {isCardSymbol} from './types/card_symbol';
-import {Color} from './types/color';
 import {isManaCost} from './types/mana_cost';
 import {isRuling} from './types/ruling';
 import {isCatalog, isErrorResponse, isList, isScryfallError, isSuccessResponse} from './types/scryfall';
