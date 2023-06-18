@@ -5,7 +5,7 @@
     "license": "ISC",
     "private": true,
     "scripts": {
-        "clean": "rm -r .yarn/cache .yarn/unplugged .yarn/install-state.gz",
+        "clean": "rm -rf .yarn/cache .yarn/unplugged .yarn/install-state.gzy && yarn workspaces foreach run clean",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "workspaces": [
