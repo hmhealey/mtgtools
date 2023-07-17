@@ -9,3 +9,5 @@
 !.yarn/versions
 
 node_modules
+
+app/dist
