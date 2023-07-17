@@ -1,14 +1,13 @@
 {
     "name": "@hmhealey/mtgtools",
-    "packageManager": "yarn@3.3.0",
     "version": "0.1.0",
     "license": "ISC",
     "private": true,
     "scripts": {
-        "build": "yarn workspaces foreach run build",
-        "clean": "yarn workspaces foreach run clean && rm -rf .yarn/cache .yarn/unplugged .yarn/install-state.gz",
-        "start": "yarn workspace app start",
-        "test": "yarn workspaces foreach run test"
+        "build": "npm --workspaces --if-present run build",
+        "clean": "npm --workspaces --if-present run clean && rm -rf node_modules",
+        "start": "npm --workspaces --if-present start",
+        "test": "npm --workspaces --if-present test"
     },
     "workspaces": [
         "app",
