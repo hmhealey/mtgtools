@@ -17,3 +17,6 @@
 ## July 17, 2023
 
 -   `create-react-app` has been deprecated...
+    -   They're now recommending the equivalent scripts for Next.js or Remix since raw React is so limited on its own.
+    -   I got rid of it in favour of doing things manually. Now that I've done this a few times, it was easy enough to pare it down to Webpack, `style-loader`/`css-loader` for CSS, `html-webpack-plugin` for HTML, TS/`ts-loader` for compiling TS, and Jest/`ts-jest`/`jest-environment-jsdom` for Testing. This all seems to work now.
+-   Currently, I'm just using TS Project References for organizing building the different packages. `ts-loader` seems to support this automatically once I worked out some issues caused by me being on WSL 1. If that doesn't work, `Wireit` seems like a good solution for sorting out that dependency graph.
