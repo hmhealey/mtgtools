@@ -26,7 +26,8 @@
         "start": "webpack serve --mode=development",
         "build": "webpack --mode=production",
         "test": "jest --verbose",
-        "clean": "rm -rf dist node_modules"
+        "clean": "rm -rf dist node_modules",
+        "clean-deps": "npm run clean && rm -rf node_modules"
     },
     "browserslist": {
         "production": [

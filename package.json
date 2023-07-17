@@ -5,7 +5,8 @@
     "private": true,
     "scripts": {
         "build": "npm --workspaces --if-present run build",
-        "clean": "npm --workspaces --if-present run clean && rm -rf node_modules",
+        "clean": "npm --workspaces --if-present run clean",
+        "clean-deps": "npm --workspaces --if-present run clean-deps && rm -rf node_modules",
         "start": "npm --workspaces --if-present start",
         "test": "npm --workspaces --if-present test"
     },
