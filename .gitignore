@@ -10,4 +10,7 @@
 
 node_modules
 
+*.tsbuildinfo
+
 app/dist
+packages/*/dist

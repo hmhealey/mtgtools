@@ -1,7 +1,19 @@
 {
     "name": "@hmhealey/scryfall",
     "private": true,
+    "exports": {
+        "./*": "./dist/*.js"
+    },
+    "typesVersions": {
+        ">=3.1": {
+            "*": [
+                "./dist/*.d.ts"
+            ]
+        }
+    },
     "scripts": {
+        "build": "tsc",
+        "clean": "rm -rf dist tsconfig.tsbuildinfo",
         "test": "jest --verbose"
     }
 }

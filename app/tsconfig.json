@@ -3,7 +3,6 @@
     "compilerOptions": {
         "esModuleInterop": true
     },
-    "includes": [
-        "./src/*"
-    ]
+    "includes": ["./src/*"],
+    "references": [{"path": "../packages/scryfall"}]
 }

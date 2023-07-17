@@ -2,6 +2,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     entry: './src/index.tsx',
+    output: {
+        filename: '[name].[contenthash].js',
+    },
     module: {
         rules: [
             {
@@ -10,7 +13,12 @@ module.exports = {
             },
             {
                 test: /\.tsx?$/i,
-                use: 'ts-loader',
+                use: {
+                    loader: 'ts-loader',
+                    options: {
+                        projectReferences: true,
+                    },
+                },
                 exclude: /node_modules/,
             },
         ],
@@ -24,7 +32,4 @@ module.exports = {
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
     },
-    // output: {
-    //     filename:
-    // }
 };
