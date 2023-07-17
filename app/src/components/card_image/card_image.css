@@ -1,0 +1,38 @@
+.CardImage {
+    border-radius: 4.75% / 3.5%;
+}
+
+.CardImage.Small {
+    height: 204px;
+    width: 146px;
+}
+
+.CardImage.Normal {
+    height: 680px;
+    width: 488px;
+}
+
+.CardImage.Large {
+    height: 936px;
+    width: 672px;
+}
+
+.CardImageError {
+    border: 1px black solid;
+    text-align: center;
+}
+
+.CardImageError.Small {
+    height: 202px;
+    width: 144px;
+}
+
+.CardImageError.Normal {
+    height: 672px;
+    width: 486px;
+}
+
+.CardImageError.Large {
+    height: 934px;
+    width: 670px;
+}

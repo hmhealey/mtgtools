@@ -1,11 +1,12 @@
 import React, {FormEvent, useCallback, useRef, useState} from 'react';
 
 import ScryfallClient from '@hmhealey/scryfall/client';
-import {Card} from '@hmhealey/scryfall/types/card';
+import {Card, ImageType} from '@hmhealey/scryfall/types/card';
 
+import CardImage from './components/card_image';
 import './App.css';
 
-function App() {
+export default function App() {
     const client = useRef(new ScryfallClient());
     const [card, setCard] = useState<Card | undefined>(undefined);
 
@@ -30,9 +31,21 @@ function App() {
                     value='Get Card'
                 />
             </form>
+            <div className='Cards'>
+                <CardImage
+                    size={ImageType.Small}
+                    card={card}
+                />
+                <CardImage
+                    size={ImageType.Normal}
+                    card={card}
+                />
+                <CardImage
+                    size={ImageType.Large}
+                    card={card}
+                />
+            </div>
             <div>{JSON.stringify(card)}</div>
         </div>
     );
 }
-
-export default App;
