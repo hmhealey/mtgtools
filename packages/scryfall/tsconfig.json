@@ -3,10 +3,10 @@
     "compilerOptions": {
         "composite": true,
         "esModuleInterop": true,
-        "outDir": "dist",
-        "rootDir": "src",
+        "outDir": "./dist",
+        "rootDir": "./src",
         "strict": true
     },
-    "include": ["src/**/*"],
-    "exclude": ["src/**/*.test.ts"]
+    "include": ["./src/**/*"],
+    "exclude": ["./src/**/*.test.ts"]
 }
