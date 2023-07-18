@@ -13,7 +13,7 @@ export interface Props {
 export default function ManaSymbol(props: Props) {
     const context = useScryfallContext();
 
-    const symbolObject = context.symbols.get(props.symbol) ?? context.symbols.get('{0}');
+    const symbolObject = context.symbols.get(props.symbol) ?? context.symbols.get('{Z}');
 
     if (!symbolObject) {
         return null;

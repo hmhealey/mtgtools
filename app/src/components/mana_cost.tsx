@@ -9,7 +9,10 @@ export interface Props {
 }
 
 export default function ManaCost(props: Props) {
-    const symbols = props.cost.split(/(?=\{)/);
+    let symbols = [];
+    if (props.cost) {
+        symbols = props.cost.split(/(?=\{)/);
+    }
 
     return (
         <span className={classNames('ManaCost', props.className)}>

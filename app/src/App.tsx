@@ -1,4 +1,4 @@
-import React, {FormEvent, useCallback, useRef, useState} from 'react';
+import React, {FormEvent, useCallback, useEffect, useRef, useState} from 'react';
 
 import ScryfallClient from '@hmhealey/scryfall/client';
 import {Card, ImageType} from '@hmhealey/scryfall/types/card';
@@ -19,18 +19,35 @@ export default function App() {
     const submitCard = useCallback((e: FormEvent) => {
         e.preventDefault();
 
-        client.current.getCardByName(cardNameBox.current.value, {fuzzy: true}).then((response) => {
+        const name = cardNameBox.current.value;
+
+        client.current.getCardByName(name, {fuzzy: true}).then((response) => {
             if (response.data) {
                 setCard(response.data);
             }
         });
     }, []);
 
+    useEffect(() => {
+        const name = cardNameBox.current.value;
+
+        if (name) {
+            client.current.getCardByName(name, {fuzzy: true}).then((response) => {
+                if (response.data) {
+                    setCard(response.data);
+                }
+            });
+        }
+    }, []);
+
     return (
         <ScryfallWrapper>
             <div className='App'>
                 <form onSubmit={submitCard}>
-                    <input ref={cardNameBox} />
+                    <input
+                        ref={cardNameBox}
+                        value='Lotus Bloom'
+                    />
                     <input
                         type='submit'
                         value='Get Card'
