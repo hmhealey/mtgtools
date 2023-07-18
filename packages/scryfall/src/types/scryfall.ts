@@ -49,11 +49,15 @@ export type ScryfallResponse<T> =
       };
 
 export function isSuccessResponse(o: unknown): o is {data: unknown} {
-    return Boolean(o && typeof o === 'object' && 'data' in o && (o as any).data && 'error' in o && !(o as any).error);
+    return Boolean(
+        o && typeof o === 'object' && 'data' in o && (o as any).data != null && 'error' in o && !(o as any).error,
+    );
 }
 
 export function isErrorResponse(o: unknown): o is {error: unknown} {
-    return Boolean(o && typeof o === 'object' && 'data' in o && !(o as any).data && 'error' in o && (o as any).error);
+    return Boolean(
+        o && typeof o === 'object' && 'data' in o && !(o as any).data != null && 'error' in o && (o as any).error,
+    );
 }
 
 export type URI = string;

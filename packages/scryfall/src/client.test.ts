@@ -8,7 +8,14 @@ import {isCardMigration} from './types/card_migration';
 import {isCardSymbol} from './types/card_symbol';
 import {isManaCost} from './types/mana_cost';
 import {isRuling} from './types/ruling';
-import {isCatalog, isErrorResponse, isList, isScryfallError, isSuccessResponse} from './types/scryfall';
+import {
+    ScryfallResponse,
+    isCatalog,
+    isErrorResponse,
+    isList,
+    isScryfallError,
+    isSuccessResponse,
+} from './types/scryfall';
 import {isScryfallSet} from './types/set';
 
 describe('ScryfallClient', () => {
@@ -90,7 +97,7 @@ describe('ScryfallClient', () => {
                 const response = await client.getCardByName('aust com', {fuzzy: true});
 
                 expect(response).toContainCard();
-                expect(response.data.name).toBe('Austere Command');
+                expect(response.data?.name).toBe('Austere Command');
             });
 
             test('exact', async () => {
@@ -107,7 +114,7 @@ describe('ScryfallClient', () => {
                 const response = await client.getCardByName('austere command', {fuzzy: false});
 
                 expect(response).toContainCard();
-                expect(response.data.name).toBe('Austere Command');
+                expect(response.data?.name).toBe('Austere Command');
             });
         });
 
@@ -134,8 +141,8 @@ describe('ScryfallClient', () => {
                 const response = await client.getRandomCard('mv=4 t:creature colors=bg');
 
                 expect(response).toContainCard();
-                expect(response.data.cmc).toBe(4);
-                expect(response.data.type_line).toContain('Creature');
+                expect(response.data?.cmc).toBe(4);
+                expect(response.data?.type_line).toContain('Creature');
             });
         });
 
@@ -150,7 +157,7 @@ describe('ScryfallClient', () => {
             ]);
 
             expect(response).toContainListOfCards();
-            expect(response.data.not_found).toEqual([{name: 'Mind Goblin'}]);
+            expect(response.data?.not_found).toEqual([{name: 'Mind Goblin'}]);
         });
 
         test('getCardBySetAndCollectorNumber', async () => {
@@ -159,7 +166,7 @@ describe('ScryfallClient', () => {
             const response = await client.getCardBySetAndCollectorNumber('xln', '96');
 
             expect(response).toContainCard();
-            expect(response.data.name).toBe('Costly Plunder');
+            expect(response.data?.name).toBe('Costly Plunder');
         });
 
         test('getCardByMultiverseId', async () => {
@@ -168,7 +175,7 @@ describe('ScryfallClient', () => {
             const response = await client.getCardByMultiverseId(409574);
 
             expect(response).toContainCard();
-            expect(response.data.name).toBe('Strip Mine');
+            expect(response.data?.name).toBe('Strip Mine');
         });
 
         test('getCardByMtgoId', async () => {
@@ -177,7 +184,7 @@ describe('ScryfallClient', () => {
             const response = await client.getCardByMtgoId(54957);
 
             expect(response).toContainCard();
-            expect(response.data.name).toBe('Ghost Quarter');
+            expect(response.data?.name).toBe('Ghost Quarter');
         });
 
         test('getCardByArenaId', async () => {
@@ -186,7 +193,7 @@ describe('ScryfallClient', () => {
             const response = await client.getCardByArenaId(67330);
 
             expect(response).toContainCard();
-            expect(response.data.name).toBe('Yargle, Glutton of Urborg');
+            expect(response.data?.name).toBe('Yargle, Glutton of Urborg');
         });
 
         test('getCardByTcgplayerId', async () => {
@@ -195,7 +202,7 @@ describe('ScryfallClient', () => {
             const response = await client.getCardByTcgplayerId(162145);
 
             expect(response).toContainCard();
-            expect(response.data.name).toBe('Rona, Disciple of Gix');
+            expect(response.data?.name).toBe('Rona, Disciple of Gix');
         });
 
         test('getCardByCardmarketId', async () => {
@@ -204,7 +211,7 @@ describe('ScryfallClient', () => {
             const response = await client.getCardByCardmarketId(379041);
 
             expect(response).toContainCard();
-            expect(response.data.name).toBe('Embodiment of Agonies');
+            expect(response.data?.name).toBe('Embodiment of Agonies');
         });
 
         test('getCardById', async () => {
@@ -213,7 +220,7 @@ describe('ScryfallClient', () => {
             const response = await client.getCardById('f295b713-1d6a-43fd-910d-fb35414bf58a');
 
             expect(response).toContainCard();
-            expect(response.data.name).toBe('Dusk // Dawn');
+            expect(response.data?.name).toBe('Dusk // Dawn');
         });
     });
 
@@ -224,7 +231,7 @@ describe('ScryfallClient', () => {
             const response = await client.getRulingsByMultiverseId(3255);
 
             expect(response).toContainListOf(isRuling);
-            expect(response.data.data[0].comment.startsWith('The ability is a mana ability')).toBe(true);
+            expect(response.data?.data[0].comment.startsWith('The ability is a mana ability')).toBe(true);
         });
 
         test('getRulingsByMtgoId', async () => {
@@ -233,7 +240,7 @@ describe('ScryfallClient', () => {
             const response = await client.getRulingsByMtgoId(57934);
 
             expect(response).toContainListOf(isRuling);
-            expect(response.data.data[0].comment.startsWith('You choose the mode as the triggered')).toBe(true);
+            expect(response.data?.data[0].comment.startsWith('You choose the mode as the triggered')).toBe(true);
         });
 
         test('getRulingsByArenaId', async () => {
@@ -242,7 +249,7 @@ describe('ScryfallClient', () => {
             const response = await client.getRulingsByArenaId(67462);
 
             expect(response).toContainListOf(isRuling);
-            expect(response.data.data[0].comment.startsWith('Each of Song of Freyalise’s')).toBe(true);
+            expect(response.data?.data[0].comment.startsWith('Each of Song of Freyalise’s')).toBe(true);
         });
 
         test('getRulingsBySetAndCollectorNumber', async () => {
@@ -251,7 +258,7 @@ describe('ScryfallClient', () => {
             const response = await client.getRulingsBySetAndCollectorNumber('ima', '65');
 
             expect(response).toContainListOf(isRuling);
-            expect(response.data.data[0].comment.startsWith('If the target spell is an illegal target')).toBe(true);
+            expect(response.data?.data[0].comment.startsWith('If the target spell is an illegal target')).toBe(true);
         });
 
         test('getRulingsById', async () => {
@@ -260,7 +267,7 @@ describe('ScryfallClient', () => {
             const response = await client.getRulingsById('f2b9983e-20d4-4d12-9e2c-ec6d9a345787');
 
             expect(response).toContainListOf(isRuling);
-            expect(response.data.data[0].comment.startsWith('It must flip like a coin')).toBe(true);
+            expect(response.data?.data[0].comment.startsWith('It must flip like a coin')).toBe(true);
         });
     });
 
@@ -280,7 +287,7 @@ describe('ScryfallClient', () => {
 
             expect(response.data).toBeDefined();
             expect(isManaCost(response.data)).toBe(true);
-            expect(response.data.cost).toBe('{X}{U}{R}');
+            expect(response.data?.cost).toBe('{X}{U}{R}');
         });
     });
 
@@ -291,7 +298,7 @@ describe('ScryfallClient', () => {
             const response = await client.getAllCardNames();
 
             expect(response).toContainCatalog();
-            expect(response.data.data).toContain('"Ach! Hans, Run!"');
+            expect(response.data?.data).toContain('"Ach! Hans, Run!"');
         });
 
         test('getAllArtistNames', async () => {
@@ -300,7 +307,7 @@ describe('ScryfallClient', () => {
             const response = await client.getAllArtistNames();
 
             expect(response).toContainCatalog();
-            expect(response.data.data).toContain('Alayna Danner');
+            expect(response.data?.data).toContain('Alayna Danner');
         });
 
         test('getWordBank', async () => {
@@ -309,7 +316,7 @@ describe('ScryfallClient', () => {
             const response = await client.getWordBank();
 
             expect(response).toContainCatalog();
-            expect(response.data.data).toContain('ass');
+            expect(response.data?.data).toContain('ass');
         });
 
         test('getAllCreatureTypes', async () => {
@@ -318,7 +325,7 @@ describe('ScryfallClient', () => {
             const response = await client.getAllCreatureTypes();
 
             expect(response).toContainCatalog();
-            expect(response.data.data).toContain('Faerie');
+            expect(response.data?.data).toContain('Faerie');
         });
 
         test('getAllPlaneswalkerTypes', async () => {
@@ -327,7 +334,7 @@ describe('ScryfallClient', () => {
             const response = await client.getAllPlaneswalkerTypes();
 
             expect(response).toContainCatalog();
-            expect(response.data.data).toContain('Tamiyo');
+            expect(response.data?.data).toContain('Tamiyo');
         });
 
         test('getAllLandTypes', async () => {
@@ -336,7 +343,7 @@ describe('ScryfallClient', () => {
             const response = await client.getAllLandTypes();
 
             expect(response).toContainCatalog();
-            expect(response.data.data).toContain("Urza's");
+            expect(response.data?.data).toContain("Urza's");
         });
 
         test('getAllArtifactTypes', async () => {
@@ -345,7 +352,7 @@ describe('ScryfallClient', () => {
             const response = await client.getAllArtifactTypes();
 
             expect(response).toContainCatalog();
-            expect(response.data.data).toContain('Vehicle');
+            expect(response.data?.data).toContain('Vehicle');
         });
 
         test('getAllEnchantmentTypes', async () => {
@@ -354,7 +361,7 @@ describe('ScryfallClient', () => {
             const response = await client.getAllEnchantmentTypes();
 
             expect(response).toContainCatalog();
-            expect(response.data.data).toContain('Cartouche');
+            expect(response.data?.data).toContain('Cartouche');
         });
 
         test('getAllSpellTypes', async () => {
@@ -363,7 +370,7 @@ describe('ScryfallClient', () => {
             const response = await client.getAllSpellTypes();
 
             expect(response).toContainCatalog();
-            expect(response.data.data).toContain('Trap');
+            expect(response.data?.data).toContain('Trap');
         });
 
         test('getAllPowers', async () => {
@@ -372,7 +379,7 @@ describe('ScryfallClient', () => {
             const response = await client.getAllPowers();
 
             expect(response).toContainCatalog();
-            expect(response.data.data).toContain('∞');
+            expect(response.data?.data).toContain('∞');
         });
 
         test('getAllToughnesses', async () => {
@@ -381,7 +388,7 @@ describe('ScryfallClient', () => {
             const response = await client.getAllToughnesses();
 
             expect(response).toContainCatalog();
-            expect(response.data.data).toContain('7-*');
+            expect(response.data?.data).toContain('7-*');
         });
 
         test('getAllLoyalties', async () => {
@@ -390,7 +397,7 @@ describe('ScryfallClient', () => {
             const response = await client.getAllLoyalties();
 
             expect(response).toContainCatalog();
-            expect(response.data.data).toContain('1d4+1');
+            expect(response.data?.data).toContain('1d4+1');
         });
 
         test('getAllWatermarks', async () => {
@@ -399,7 +406,7 @@ describe('ScryfallClient', () => {
             const response = await client.getAllWatermarks();
 
             expect(response).toContainCatalog();
-            expect(response.data.data).toContain('agentsofsneak');
+            expect(response.data?.data).toContain('agentsofsneak');
         });
 
         test('getAllKeywordAbilities', async () => {
@@ -408,7 +415,7 @@ describe('ScryfallClient', () => {
             const response = await client.getAllKeywordAbilities();
 
             expect(response).toContainCatalog();
-            expect(response.data.data).toContain('Gravestorm');
+            expect(response.data?.data).toContain('Gravestorm');
         });
 
         test('getAllKeywordActions', async () => {
@@ -417,7 +424,7 @@ describe('ScryfallClient', () => {
             const response = await client.getAllKeywordActions();
 
             expect(response).toContainCatalog();
-            expect(response.data.data).toContain('Meld');
+            expect(response.data?.data).toContain('Meld');
         });
 
         test('getAllAbilityWords', async () => {
@@ -426,7 +433,7 @@ describe('ScryfallClient', () => {
             const response = await client.getAllAbilityWords();
 
             expect(response).toContainCatalog();
-            expect(response.data.data).toContain('Landfall');
+            expect(response.data?.data).toContain('Landfall');
         });
     });
 
@@ -446,7 +453,7 @@ describe('ScryfallClient', () => {
 
             expect(response.data).toBeDefined();
             expect(isBulkData(response.data)).toBe(true);
-            expect(response.data.type).toBe('all_cards');
+            expect(response.data?.type).toBe('all_cards');
         });
 
         test('getBulkDataByType', async () => {
@@ -456,7 +463,7 @@ describe('ScryfallClient', () => {
 
             expect(response.data).toBeDefined();
             expect(isBulkData(response.data)).toBe(true);
-            expect(response.data.type).toBe('oracle_cards');
+            expect(response.data?.type).toBe('oracle_cards');
         });
     });
 
@@ -466,11 +473,8 @@ describe('ScryfallClient', () => {
 
             const response = await client.getCardMigrations(1);
 
-            console.log(response.data.data[0]);
-            console.log(isCardMigration(response.data.data[0]));
-
             expect(response).toContainListOf(isCardMigration);
-            // expect(response.data.next_page).toBe('https://api.scryfall.com/migrations?page=2');
+            expect(response.data?.next_page).toBe('https://api.scryfall.com/migrations?page=2');
         });
 
         describe('getCardMigrationById', () => {
@@ -481,9 +485,9 @@ describe('ScryfallClient', () => {
 
                 expect(response.data).toBeDefined();
                 expect(isCardMigration(response.data)).toBe(true);
-                expect(response.data.note).toBe('Un-rebalanced on Arena');
-                expect(response.data.migration_strategy).toBe('merge');
-                expect(response.data.new_scryfall_id).toBeDefined();
+                expect(response.data?.note).toBe('Un-rebalanced on Arena');
+                expect(response.data?.migration_strategy).toBe('merge');
+                expect(response.data?.new_scryfall_id).toBeDefined();
             });
 
             test('delete', async () => {
@@ -493,9 +497,9 @@ describe('ScryfallClient', () => {
 
                 expect(response.data).toBeDefined();
                 expect(isCardMigration(response.data)).toBe(true);
-                expect(response.data.note).toBe("Mistakenly imported, doesn't really exist");
-                expect(response.data.migration_strategy).toBe('delete');
-                expect(response.data.new_scryfall_id).not.toBeDefined();
+                expect(response.data?.note).toBe("Mistakenly imported, doesn't really exist");
+                expect(response.data?.migration_strategy).toBe('delete');
+                expect(response.data?.new_scryfall_id).not.toBeDefined();
             });
         });
     });
@@ -534,21 +538,34 @@ const toContainListOf: MatcherFunction<[(o: unknown) => o is any]> = function <T
 ) {
     if (!isSuccessResponse(actual)) {
         return {
-            message: () => `expect object with keys ${Object.keys(actual)} to be a success response`,
+            message: () =>
+                'expected object to be a success response, but received an object with the keys ' +
+                JSON.stringify(actual),
+            pass: false,
+        };
+    }
+
+    if (actual.data == null) {
+        return {
+            message: () => 'expected success response to have defined data',
             pass: false,
         };
     }
 
     if (!isList(actual.data)) {
         return {
-            message: () => `expect object with keys ${Object.keys(actual.data)} to be a list`,
+            message: () =>
+                'expected response data to be a list, but received an object with the keys ' +
+                Object.keys(actual.data as any),
             pass: false,
         };
     }
 
     if (!isType(actual.data.data[0])) {
         return {
-            message: () => `expect object with keys ${Object.keys(actual.data)} to be of the given type`,
+            message: () =>
+                'expected object to be of the given type, but received an object with the keys ' +
+                Object.keys((actual.data as any).data[0]),
             pass: false,
         };
     }
