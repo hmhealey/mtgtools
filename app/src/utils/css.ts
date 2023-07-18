@@ -1,6 +1,7 @@
-type MaybeClassName = string | string[] | Record<string, boolean | null | undefined>;
+export type ClassName = ClassNameElement[];
+export type ClassNameElement = string | ClassNameElement[] | Record<string, boolean | null | undefined>;
 
-export function classNames(...args: MaybeClassName[]): string {
+export function classNames(...args: ClassName): string {
     let className = '';
 
     for (let i = 0; i < args.length; i++) {
@@ -11,7 +12,7 @@ export function classNames(...args: MaybeClassName[]): string {
             className += separator + arg;
         } else if (Array.isArray(arg)) {
             const separator = className ? ' ' : '';
-            className += separator + arg.join(' ');
+            className += separator + classNames(...arg);
         } else if (typeof arg === 'object') {
             for (const key of Object.keys(arg)) {
                 if (arg[key]) {

@@ -5,6 +5,10 @@ import {Card, ImageType} from '@hmhealey/scryfall/types/card';
 
 import CardImage from './components/card_image';
 import './App.css';
+import ScryfallWrapper from './components/scryfall_wrapper';
+import CardDetail from './layouts/card_detail';
+import ManaSymbol from './components/mana_symbol';
+import ManaCost from './components/mana_cost';
 
 export default function App() {
     const client = useRef(new ScryfallClient());
@@ -23,29 +27,24 @@ export default function App() {
     }, []);
 
     return (
-        <div className='App'>
-            <form onSubmit={submitCard}>
-                <input ref={cardNameBox} />
-                <input
-                    type='submit'
-                    value='Get Card'
-                />
-            </form>
-            <div className='Cards'>
-                <CardImage
-                    size={ImageType.Small}
-                    card={card}
-                />
-                <CardImage
-                    size={ImageType.Normal}
-                    card={card}
-                />
-                <CardImage
-                    size={ImageType.Large}
-                    card={card}
-                />
+        <ScryfallWrapper>
+            <div className='App'>
+                <form onSubmit={submitCard}>
+                    <input ref={cardNameBox} />
+                    <input
+                        type='submit'
+                        value='Get Card'
+                    />
+                </form>
+                <span>
+                    <ManaSymbol symbol={'{R}'} />
+                    <ManaSymbol symbol={'{U/B}'} />
+                    <ManaSymbol symbol={'{100}'} />
+                    <ManaSymbol symbol={'{U/R/P}'} />
+                </span>
+                <ManaCost cost={'{W}{U}{R}{B}{G}{5}{5}'} />
+                {Boolean(card) && <CardDetail card={card} />}
             </div>
-            <div>{JSON.stringify(card)}</div>
-        </div>
+        </ScryfallWrapper>
     );
 }

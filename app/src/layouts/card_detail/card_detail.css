@@ -1,0 +1,26 @@
+.CardDetail {
+    display: flex;
+}
+
+.CardDetailText {
+    width: 500px;
+}
+
+.CardDetailTitle {
+    display: flex;
+    flex-flow: row wrap;
+    font-size: 1.5em;
+    font-weight: normal;
+    justify-content: space-between;
+    margin: 0;
+}
+
+.CardDetailTitle .ManaSymbol {
+    margin-bottom: -4px;
+    margin-left: 1px;
+    margin-right: 1px;
+    margin-top: 8px;
+}
+
+.CardDetailType {
+}
