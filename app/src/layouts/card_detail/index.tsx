@@ -4,6 +4,7 @@ import {Card} from '@hmhealey/scryfall/types/card';
 
 import CardImage from '../../components/card_image';
 import ManaCost from '../../components/mana_cost';
+import OracleText from '../../components/oracle_text';
 
 import './card_detail.css';
 
@@ -26,7 +27,7 @@ export default function CardDetail(props: Props) {
                     <span>{props.card.set_name}</span>
                 </span>
                 <hr />
-                <span>{props.card.oracle_text}</span>
+                <OracleText card={props.card} />
                 <hr />
                 <span>{props.card.flavor_text}</span>
             </div>
