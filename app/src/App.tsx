@@ -46,7 +46,7 @@ export default function App() {
                 <form onSubmit={submitCard}>
                     <input
                         ref={cardNameBox}
-                        value='Lotus Bloom'
+                        defaultValue='Lotus Bloom'
                     />
                     <input
                         type='submit'
