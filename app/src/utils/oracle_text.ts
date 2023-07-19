@@ -123,9 +123,6 @@ export function parseOracleText(tokens: OracleToken[]): OracleNode {
     });
 
     let index = 0;
-    // let current = [root, root.firstChild];
-    // let tip = current[current.length - 1];
-    // while (index <= tokens.length && current.length > 1) {
     let tip = root.firstChild;
     while (index < tokens.length && tip.parent) {
         const token = tokens[index];
@@ -136,7 +133,6 @@ export function parseOracleText(tokens: OracleToken[]): OracleNode {
         switch (token.type) {
             case 'start':
             case 'end':
-                // TODO these tokens might not be needed
                 break;
 
             case 'text':
@@ -144,20 +140,12 @@ export function parseOracleText(tokens: OracleToken[]): OracleNode {
                     type: 'text',
                     text: token.text,
                 });
-                // tip.children.push({
-                //     type: 'text',
-                //     text: token.text,
-                // });
                 break;
             case 'symbol':
                 appendChild(tip, {
                     type: 'symbol',
                     symbol: token.symbol,
                 });
-                // tip.children.push({
-                //     type: 'symbol',
-                //     symbol: token.symbol,
-                // });
                 break;
 
             case 'open_bracket': {
@@ -166,17 +154,10 @@ export function parseOracleText(tokens: OracleToken[]): OracleNode {
                 };
                 appendChild(tip, newReminderText);
                 tip = newReminderText;
-                // tip.children.push({
-                //     type: 'reminder_text',
-                //     children: [],
-                // });
-                // tip = tip.children[tip.children.length - 1];
                 break;
             }
             case 'close_bracket':
                 tip = tip.parent;
-                // current.pop();
-                // tip = current[current.length - 1];
                 break;
 
             case 'newline': {
@@ -184,17 +165,6 @@ export function parseOracleText(tokens: OracleToken[]): OracleNode {
                     type: 'paragraph',
                 });
                 tip = tip.nextSibling;
-                // current.pop();
-                // tip = current[current.length - 1];
-
-                // const newParagraph: OracleNode = {
-                //     type: 'paragraph',
-                //     children: [],
-                // };
-
-                // current.push(newParagraph);
-                // tip.children.push(newParagraph);
-                // tip = current[current.length - 1];
                 break;
             }
 
