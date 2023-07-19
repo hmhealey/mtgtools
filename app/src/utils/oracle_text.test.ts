@@ -248,6 +248,26 @@ describe('tokenizeOracleText', () => {
             {type: 'end'},
         ]);
     });
+
+    test("should correctly tokenize flavour words at the beginning of list options (You Find the Villans' Lair)", () => {
+        const actual = tokenizeOracleText(
+            'Choose one —\n• Foil Their Scheme — Counter target spell.\n• Learn Their Secrets — Draw two cards, then discard two cards.',
+        );
+
+        expect(actual).toMatchObject([
+            {type: 'start'},
+            {type: 'text', text: 'Choose one —'},
+            {type: 'newline'},
+            {type: 'bullet'},
+            {type: 'ability_word', ability: 'Foil Their Scheme'},
+            {type: 'text', text: ' — Counter target spell.'},
+            {type: 'newline'},
+            {type: 'bullet'},
+            {type: 'ability_word', ability: 'Learn Their Secrets'},
+            {type: 'text', text: ' — Draw two cards, then discard two cards.'},
+            {type: 'end'},
+        ]);
+    });
 });
 
 describe('parseOracleText', () => {
@@ -669,6 +689,66 @@ describe('parseOracleText', () => {
         appendChild(paragraph2, {
             type: 'text',
             text: ' — When Owlbear enters the battlefield, draw a card.',
+        });
+
+        expect(actual).toEqual(root);
+    });
+
+    test("should correctly parse flavour words at the beginning of list options (You Find the Villans' Lair)", () => {
+        const tokens = tokenizeOracleText(
+            'Choose one —\n• Foil Their Scheme — Counter target spell.\n• Learn Their Secrets — Draw two cards, then discard two cards.',
+        );
+        const actual = parseOracleText(tokens);
+
+        const root: OracleNode = {
+            type: 'root',
+        };
+
+        const paragraph1: OracleNode = {
+            type: 'paragraph',
+        };
+        appendChild(root, paragraph1);
+
+        appendChild(paragraph1, {
+            type: 'text',
+            text: 'Choose one —',
+        });
+
+        const list: OracleNode = {
+            type: 'list',
+        };
+        appendChild(root, list);
+
+        const listItem1: OracleNode = {
+            type: 'list_item',
+        };
+        appendChild(list, listItem1);
+
+        const abilityWord1: OracleNode = {
+            type: 'ability_word',
+            ability: 'Foil Their Scheme',
+        };
+        appendChild(listItem1, abilityWord1);
+
+        appendChild(listItem1, {
+            type: 'text',
+            text: ' — Counter target spell.',
+        });
+
+        const listItem2: OracleNode = {
+            type: 'list_item',
+        };
+        appendChild(list, listItem2);
+
+        const abilityWord2: OracleNode = {
+            type: 'ability_word',
+            ability: 'Learn Their Secrets',
+        };
+        appendChild(listItem2, abilityWord2);
+
+        appendChild(listItem2, {
+            type: 'text',
+            text: ' — Draw two cards, then discard two cards.',
         });
 
         expect(actual).toEqual(root);
