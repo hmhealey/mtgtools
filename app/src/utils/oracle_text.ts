@@ -7,7 +7,8 @@ type OracleTokenTypes =
     | {type: 'symbol'; symbol: string}
     | {type: 'open_bracket'}
     | {type: 'close_bracket'}
-    | {type: 'newline'};
+    | {type: 'newline'}
+    | {type: 'ability_word'; ability: string};
 export type OracleToken = OracleTokenTypes & {start: number; end: number};
 
 type OracleNodeTypes =
@@ -15,7 +16,8 @@ type OracleNodeTypes =
     | {type: 'paragraph'}
     | {type: 'reminder_text'}
     | {type: 'symbol'; symbol: string}
-    | {type: 'text'; text: string};
+    | {type: 'text'; text: string}
+    | {type: 'ability_word'; ability: string};
 export type OracleNode = Node<OracleNodeTypes>;
 
 export interface OracleWalker {
@@ -32,10 +34,33 @@ export function tokenizeOracleText(text: string): OracleToken[] {
         },
     ];
 
+    // TODO AFR cards have ability words in a list of options
+    // TODO Treasure Chest has an ability word after a die roll
+    // TODO die rolls? sagas? planeswalkers? prototypes?
+
     let index = 0;
     let remaining = text;
+    let startOfParagraph = true;
     while (remaining) {
-        let match = /^\{[^}]*\}/.exec(remaining);
+        let match;
+
+        if (startOfParagraph) {
+            match = /^[^\u2014\n]+(?= \u2014 )/.exec(remaining);
+            if (match) {
+                tokens.push({
+                    type: 'ability_word',
+                    ability: match[0],
+                    start: index,
+                    end: index + match[0].length,
+                });
+
+                index += match[0].length;
+                remaining = remaining.substring(match[0].length);
+                continue;
+            }
+        }
+
+        match = /^\{[^}]*\}/.exec(remaining);
         if (match) {
             tokens.push({
                 type: 'symbol',
@@ -46,6 +71,7 @@ export function tokenizeOracleText(text: string): OracleToken[] {
 
             index += match[0].length;
             remaining = remaining.substring(match[0].length);
+            startOfParagraph = false;
             continue;
         }
 
@@ -59,6 +85,7 @@ export function tokenizeOracleText(text: string): OracleToken[] {
 
             index += match[0].length;
             remaining = remaining.substring(match[0].length);
+            startOfParagraph = false;
             continue;
         }
 
@@ -72,6 +99,7 @@ export function tokenizeOracleText(text: string): OracleToken[] {
 
             index += match[0].length;
             remaining = remaining.substring(match[0].length);
+            startOfParagraph = false;
             continue;
         }
 
@@ -85,6 +113,7 @@ export function tokenizeOracleText(text: string): OracleToken[] {
 
             index += match[0].length;
             remaining = remaining.substring(match[0].length);
+            startOfParagraph = true;
             continue;
         }
 
@@ -99,6 +128,7 @@ export function tokenizeOracleText(text: string): OracleToken[] {
 
             index += match[0].length;
             remaining = remaining.substring(match[0].length);
+            startOfParagraph = false;
             continue;
         }
 
@@ -145,6 +175,12 @@ export function parseOracleText(tokens: OracleToken[]): OracleNode {
                 appendChild(tip, {
                     type: 'symbol',
                     symbol: token.symbol,
+                });
+                break;
+            case 'ability_word':
+                appendChild(tip, {
+                    type: 'ability_word',
+                    ability: token.ability,
                 });
                 break;
 
