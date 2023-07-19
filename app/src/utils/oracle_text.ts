@@ -37,7 +37,6 @@ export function tokenizeOracleText(text: string): OracleToken[] {
         },
     ];
 
-    // TODO AFR cards have ability words in a list of options
     // TODO Treasure Chest has an ability word after a die roll
     // TODO die rolls? sagas? planeswalkers? prototypes?
 
