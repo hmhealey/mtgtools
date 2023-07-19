@@ -22,10 +22,10 @@ export default function CardDetail(props: Props) {
                     <ManaCost cost={props.card.mana_cost} />
                 </h1>
                 <hr />
-                <span className='CardDetailType'>
+                <div className='CardDetailTypeLine'>
                     <span>{props.card.type_line}</span>
                     <span>{props.card.set_name}</span>
-                </span>
+                </div>
                 <hr />
                 <OracleText card={props.card} />
                 <hr />
