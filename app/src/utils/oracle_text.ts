@@ -8,7 +8,8 @@ type OracleTokenTypes =
     | {type: 'open_bracket'}
     | {type: 'close_bracket'}
     | {type: 'newline'}
-    | {type: 'ability_word'; ability: string};
+    | {type: 'ability_word'; ability: string}
+    | {type: 'bullet'};
 export type OracleToken = OracleTokenTypes & {start: number; end: number};
 
 type OracleNodeTypes =
@@ -17,7 +18,9 @@ type OracleNodeTypes =
     | {type: 'reminder_text'}
     | {type: 'symbol'; symbol: string}
     | {type: 'text'; text: string}
-    | {type: 'ability_word'; ability: string};
+    | {type: 'ability_word'; ability: string}
+    | {type: 'list'}
+    | {type: 'list_item'};
 export type OracleNode = Node<OracleNodeTypes>;
 
 export interface OracleWalker {
@@ -40,11 +43,26 @@ export function tokenizeOracleText(text: string): OracleToken[] {
 
     let index = 0;
     let remaining = text;
-    let startOfParagraph = true;
+    let startOfLine = true;
     while (remaining) {
         let match;
 
-        if (startOfParagraph) {
+        if (startOfLine) {
+            match = /^\u2022 /.exec(remaining);
+            if (match) {
+                tokens.push({
+                    type: 'bullet',
+                    start: index,
+                    end: index + match[0].length,
+                });
+
+                index += match[0].length;
+                remaining = remaining.substring(match[0].length);
+                startOfLine = false;
+
+                // Don't continue here since we want to be able to parse an ability word immediately after a bullet
+            }
+
             match = /^[^\u2014\n]+(?= \u2014 )/.exec(remaining);
             if (match) {
                 tokens.push({
@@ -56,6 +74,7 @@ export function tokenizeOracleText(text: string): OracleToken[] {
 
                 index += match[0].length;
                 remaining = remaining.substring(match[0].length);
+                startOfLine = false;
                 continue;
             }
         }
@@ -71,7 +90,7 @@ export function tokenizeOracleText(text: string): OracleToken[] {
 
             index += match[0].length;
             remaining = remaining.substring(match[0].length);
-            startOfParagraph = false;
+            startOfLine = false;
             continue;
         }
 
@@ -85,7 +104,7 @@ export function tokenizeOracleText(text: string): OracleToken[] {
 
             index += match[0].length;
             remaining = remaining.substring(match[0].length);
-            startOfParagraph = false;
+            startOfLine = false;
             continue;
         }
 
@@ -99,7 +118,7 @@ export function tokenizeOracleText(text: string): OracleToken[] {
 
             index += match[0].length;
             remaining = remaining.substring(match[0].length);
-            startOfParagraph = false;
+            startOfLine = false;
             continue;
         }
 
@@ -113,7 +132,7 @@ export function tokenizeOracleText(text: string): OracleToken[] {
 
             index += match[0].length;
             remaining = remaining.substring(match[0].length);
-            startOfParagraph = true;
+            startOfLine = true;
             continue;
         }
 
@@ -128,7 +147,7 @@ export function tokenizeOracleText(text: string): OracleToken[] {
 
             index += match[0].length;
             remaining = remaining.substring(match[0].length);
-            startOfParagraph = false;
+            startOfLine = false;
             continue;
         }
 
@@ -160,6 +179,7 @@ export function parseOracleText(tokens: OracleToken[]): OracleNode {
         // This all assumes that the array of tokens are validly nested. In particular:
         // 1. Brackets are matched and never nested
         // 2. Newlines don't appear in brackets
+        // 3. Bullets only appear immediately after a newline
         switch (token.type) {
             case 'start':
             case 'end':
@@ -196,11 +216,46 @@ export function parseOracleText(tokens: OracleToken[]): OracleNode {
                 tip = tip.parent;
                 break;
 
+            case 'bullet': {
+                const newListItem: OracleNode = {
+                    type: 'list_item',
+                };
+                appendChild(tip, newListItem);
+                tip = newListItem;
+                break;
+            }
+
             case 'newline': {
-                insertSiblingAfter(tip, {
-                    type: 'paragraph',
-                });
-                tip = tip.nextSibling;
+                const nextToken = tokens[index + 1];
+
+                if (nextToken.type === 'bullet') {
+                    if (tip.type === 'list_item') {
+                        // Exit the list item back to the list
+                        tip = tip.parent;
+                    } else {
+                        // Assume we're in a paragraph, so start a new list
+                        insertSiblingAfter(tip, {
+                            type: 'list',
+                        });
+                        tip = tip.nextSibling;
+                    }
+                } else {
+                    if (tip.type === 'list_item') {
+                        // Exit the list item and list
+                        tip = tip.parent;
+
+                        insertSiblingAfter(tip, {
+                            type: 'paragraph',
+                        });
+                        tip = tip.nextSibling;
+                    } else {
+                        // Start a new paragraph
+                        insertSiblingAfter(tip, {
+                            type: 'paragraph',
+                        });
+                        tip = tip.nextSibling;
+                    }
+                }
                 break;
             }
 

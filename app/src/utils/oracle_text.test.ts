@@ -39,9 +39,39 @@ describe('tokenizeOracleText', () => {
             {type: 'start'},
             {type: 'text', text: 'Choose one —'},
             {type: 'newline'},
-            {type: 'text', text: '• Cathartic Pyre deals 3 damage to target creature or planeswalker.'},
+            {type: 'bullet'},
+            {type: 'text', text: 'Cathartic Pyre deals 3 damage to target creature or planeswalker.'},
             {type: 'newline'},
-            {type: 'text', text: '• Discard up to two cards, then draw that many cards.'},
+            {type: 'bullet'},
+            {type: 'text', text: 'Discard up to two cards, then draw that many cards.'},
+            {type: 'end'},
+        ]);
+    });
+
+    test('should correctly tokenize text following a list of options', () => {
+        const actual = tokenizeOracleText(
+            'Choose one —\n• Search your library for up to two creature cards, reveal them, put them into your hand, then shuffle.\n• Put up to two creature cards from your hand onto the battlefield.\nEntwine {2} (Choose both if you pay the entwine cost.)',
+        );
+
+        expect(actual).toMatchObject([
+            {type: 'start'},
+            {type: 'text', text: 'Choose one —'},
+            {type: 'newline'},
+            {type: 'bullet'},
+            {
+                type: 'text',
+                text: 'Search your library for up to two creature cards, reveal them, put them into your hand, then shuffle.',
+            },
+            {type: 'newline'},
+            {type: 'bullet'},
+            {type: 'text', text: 'Put up to two creature cards from your hand onto the battlefield.'},
+            {type: 'newline'},
+            {type: 'text', text: 'Entwine '},
+            {type: 'symbol', symbol: '{2}'},
+            {type: 'text', text: ' '},
+            {type: 'open_bracket'},
+            {type: 'text', text: 'Choose both if you pay the entwine cost.'},
+            {type: 'close_bracket'},
             {type: 'end'},
         ]);
     });
@@ -309,6 +339,127 @@ describe('parseOracleText', () => {
             text: 'Choose one —',
         });
 
+        const list: OracleNode = {
+            type: 'list',
+        };
+        appendChild(root, list);
+
+        const listItem1: OracleNode = {
+            type: 'list_item',
+        };
+        appendChild(list, listItem1);
+
+        appendChild(listItem1, {
+            type: 'text',
+            text: 'Cathartic Pyre deals 3 damage to target creature or planeswalker.',
+        });
+
+        const listItem2: OracleNode = {
+            type: 'list_item',
+        };
+        appendChild(list, listItem2);
+
+        appendChild(listItem2, {
+            type: 'text',
+            text: 'Discard up to two cards, then draw that many cards.',
+        });
+
+        expect(actual).toEqual(root);
+    });
+
+    test('should correctly parse a list of options', () => {
+        const tokens = tokenizeOracleText(
+            'Choose one —\n• Cathartic Pyre deals 3 damage to target creature or planeswalker.\n• Discard up to two cards, then draw that many cards.',
+        );
+        const actual = parseOracleText(tokens);
+
+        const root: OracleNode = {
+            type: 'root',
+        };
+
+        const paragraph1: OracleNode = {
+            type: 'paragraph',
+        };
+        appendChild(root, paragraph1);
+
+        appendChild(paragraph1, {
+            type: 'text',
+            text: 'Choose one —',
+        });
+
+        const list: OracleNode = {
+            type: 'list',
+        };
+        appendChild(root, list);
+
+        const listItem1: OracleNode = {
+            type: 'list_item',
+        };
+        appendChild(list, listItem1);
+
+        appendChild(listItem1, {
+            type: 'text',
+            text: 'Cathartic Pyre deals 3 damage to target creature or planeswalker.',
+        });
+
+        const listItem2: OracleNode = {
+            type: 'list_item',
+        };
+        appendChild(list, listItem2);
+
+        appendChild(listItem2, {
+            type: 'text',
+            text: 'Discard up to two cards, then draw that many cards.',
+        });
+
+        expect(actual).toEqual(root);
+    });
+
+    test('should correctly parse text following a list of options', () => {
+        const tokens = tokenizeOracleText(
+            'Choose one —\n• Search your library for up to two creature cards, reveal them, put them into your hand, then shuffle.\n• Put up to two creature cards from your hand onto the battlefield.\nEntwine {2} (Choose both if you pay the entwine cost.)',
+        );
+        const actual = parseOracleText(tokens);
+
+        const root: OracleNode = {
+            type: 'root',
+        };
+
+        const paragraph1: OracleNode = {
+            type: 'paragraph',
+        };
+        appendChild(root, paragraph1);
+
+        appendChild(paragraph1, {
+            type: 'text',
+            text: 'Choose one —',
+        });
+
+        const list: OracleNode = {
+            type: 'list',
+        };
+        appendChild(root, list);
+
+        const listItem1: OracleNode = {
+            type: 'list_item',
+        };
+        appendChild(list, listItem1);
+
+        appendChild(listItem1, {
+            type: 'text',
+            text: 'Search your library for up to two creature cards, reveal them, put them into your hand, then shuffle.',
+        });
+
+        const listItem2: OracleNode = {
+            type: 'list_item',
+        };
+        appendChild(list, listItem2);
+
+        appendChild(listItem2, {
+            type: 'text',
+            text: 'Put up to two creature cards from your hand onto the battlefield.',
+        });
+
         const paragraph2: OracleNode = {
             type: 'paragraph',
         };
@@ -316,18 +467,17 @@ describe('parseOracleText', () => {
 
         appendChild(paragraph2, {
             type: 'text',
-            text: '• Cathartic Pyre deals 3 damage to target creature or planeswalker.',
-        });
+            text: 'Entwine ',
+        }),
+            appendChild(paragraph2, {type: 'symbol', symbol: '{2}'});
+        appendChild(paragraph2, {type: 'text', text: ' '});
 
-        const paragraph3: OracleNode = {
-            type: 'paragraph',
+        const reminderText: OracleNode = {
+            type: 'reminder_text',
         };
-        appendChild(root, paragraph3);
+        appendChild(paragraph2, reminderText);
 
-        appendChild(paragraph3, {
-            type: 'text',
-            text: '• Discard up to two cards, then draw that many cards.',
-        });
+        appendChild(reminderText, {type: 'text', text: 'Choose both if you pay the entwine cost.'});
 
         expect(actual).toEqual(root);
     });
