@@ -37,9 +37,6 @@ export function tokenizeOracleText(text: string): OracleToken[] {
         },
     ];
 
-    // TODO Treasure Chest has an ability word after a die roll
-    // TODO die rolls? sagas? planeswalkers? prototypes?
-
     let index = 0;
     let remaining = text;
     let startOfLine = true;
