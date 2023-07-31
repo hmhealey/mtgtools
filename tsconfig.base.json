@@ -2,7 +2,9 @@
     "compilerOptions": {
         "jsx": "react",
         "lib": ["ES2017", "DOM"],
-        "resolveJsonModule": true
+        "module": "CommonJS",
+        "resolveJsonModule": true,
+        "target": "es2015"
     },
     "exclude": ["node_modules", "**/dist"]
 }
