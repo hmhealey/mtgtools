@@ -92,8 +92,8 @@ export type Card = {
     textless: boolean;
     variation: boolean;
     variation_of?: UUID;
-    security_stamp: 'oval' | 'triangle' | 'acorn' | 'circle' | 'arena' | 'heart';
-    watermark: string;
+    security_stamp?: 'oval' | 'triangle' | 'acorn' | 'circle' | 'arena' | 'heart';
+    watermark?: string;
     preview?: {
         previewed_at: ScryfallDate;
         source_uri: URI;

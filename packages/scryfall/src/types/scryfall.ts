@@ -14,9 +14,9 @@ export type List<T, NotFoundType = never> = {
     data: T[];
     has_more?: boolean;
     next_page?: URI;
-    not_found: NotFoundType[];
+    not_found?: NotFoundType[];
     total_card?: string;
-    warnings: string[];
+    warnings?: string[];
 };
 
 export function isList(o: unknown): o is List<unknown> {
