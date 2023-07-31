@@ -268,6 +268,58 @@ describe('tokenizeOracleText', () => {
             {type: 'end'},
         ]);
     });
+
+    test('known isue: should not recognize anchor words as ability words (Citadel Siege)', () => {
+        const actual = tokenizeOracleText(
+            'As Outpost Siege enters the battlefield, choose Khans or Dragons.\n• Khans — At the beginning of your upkeep, exile the top card of your library. Until end of turn, you may play that card.\n• Dragons — Whenever a creature you control leaves the battlefield, Outpost Siege deals 1 damage to any target.',
+        );
+
+        expect(actual).toMatchObject([
+            {type: 'start'},
+            {type: 'text', text: 'As Outpost Siege enters the battlefield, choose Khans or Dragons.'},
+            {type: 'newline'},
+            {type: 'bullet'},
+            {type: 'ability_word', ability: 'Khans'},
+            {
+                type: 'text',
+                text: ' — At the beginning of your upkeep, exile the top card of your library. Until end of turn, you may play that card.',
+            },
+            {type: 'newline'},
+            {type: 'bullet'},
+            {type: 'ability_word', ability: 'Dragons'},
+            {
+                type: 'text',
+                text: ' — Whenever a creature you control leaves the battlefield, Outpost Siege deals 1 damage to any target.',
+            },
+            {type: 'end'},
+        ]);
+    });
+
+    test('known issue: should correctly recognize ability words after die rolls (Treasure Chest)', () => {
+        // Scryfall gives us em dashes for these number ranges, but Gatherer uses en dashes
+        const actual = tokenizeOracleText(
+            "{4}, Sacrifice Treasure Chest: Roll a d20.\n1 | Trapped! — You lose 3 life.\n2—9 | Create five Treasure tokens.\n10—19 | You gain 3 life and draw three cards.\n20 | Search your library for a card. If it's an artifact card, you may put it onto the battlefield. Otherwise, put that card into your hand. Then shuffle.",
+        );
+
+        expect(actual).toMatchObject([
+            {type: 'start'},
+            {type: 'symbol', symbol: '{4}'},
+            {type: 'text', text: ', Sacrifice Treasure Chest: Roll a d20.'},
+            {type: 'newline'},
+            {type: 'ability_word', ability: '1 | Trapped!'},
+            {type: 'text', text: ' — You lose 3 life.'},
+            {type: 'newline'},
+            {type: 'text', text: '2—9 | Create five Treasure tokens.'},
+            {type: 'newline'},
+            {type: 'text', text: '10—19 | You gain 3 life and draw three cards.'},
+            {type: 'newline'},
+            {
+                type: 'text',
+                text: "20 | Search your library for a card. If it's an artifact card, you may put it onto the battlefield. Otherwise, put that card into your hand. Then shuffle.",
+            },
+            {type: 'end'},
+        ]);
+    });
 });
 
 describe('parseOracleText', () => {
