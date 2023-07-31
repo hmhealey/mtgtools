@@ -2,7 +2,7 @@
 module.exports = {
     preset: 'ts-jest',
     moduleNameMapper: {
-        '\\.css$': '<rootDir>/test/cssMock.js',
+        '\\.css$': '<rootDir>/test/css_mock.js',
     },
     setupFilesAfterEnv: ['<rootDir>/test/setup.js'],
     testEnvironment: '<rootDir>/test/environment.ts',
