@@ -133,48 +133,72 @@ export interface Walker<T = never> {
     next(): {node: Node<T>; entering: boolean} | undefined;
     resumeAt(node: Node<T>, entering: boolean);
 }
+export interface WalkerEvent<T = never> {
+    node: Node<T>;
+    entering: boolean;
+}
+
+export class Walker<T = never> {
+    private current: Node<T>;
+    private isEntering = true;
+
+    constructor(root: Node<T>) {
+        this.current = root;
+    }
+
+    hasNext() {
+        return Boolean(this.current);
+    }
+
+    next(): WalkerEvent<T> {
+        if (!this.current) {
+            return undefined;
+        }
+
+        const node = this.current;
+        const wasEntering = this.isEntering;
+
+        if (this.isEntering) {
+            if (node.firstChild) {
+                this.current = node.firstChild;
+                this.isEntering = true;
+            } else {
+                this.isEntering = false;
+            }
+        } else {
+            if (node.nextSibling) {
+                this.current = node.nextSibling;
+                this.isEntering = true;
+            } else {
+                this.current = node.parent;
+                this.isEntering = false;
+            }
+        }
+
+        return {
+            node,
+            entering: wasEntering,
+        };
+    }
+
+    resumeAt(node: Node<T>, entering: boolean) {
+        this.current = node;
+        this.isEntering = entering;
+    }
+
+    [Symbol.iterator](): Iterator<WalkerEvent<T>> {
+        return {
+            next: () => {
+                const value = this.next();
+                return {
+                    done: !value,
+                    value: value,
+                };
+            },
+        };
+    }
+}
 
 export function walkAST<T>(root: Node<T>): Walker<T> {
-    let current: Node<T> | undefined = root;
-    let isEntering = true;
-
-    return {
-        hasNext: () => {
-            return Boolean(current);
-        },
-        next: () => {
-            if (!current) {
-                return undefined;
-            }
-
-            const node = current;
-            const wasEntering = isEntering;
-
-            if (isEntering) {
-                if (node.firstChild) {
-                    current = node.firstChild;
-                    isEntering = true;
-                } else {
-                    isEntering = false;
-                }
-            } else {
-                if (node.nextSibling) {
-                    current = node.nextSibling;
-                    isEntering = true;
-                } else {
-                    current = node.parent;
-                    isEntering = false;
-                }
-            }
-
-            return {
-                node,
-                entering: wasEntering,
-            };
-        },
-        resumeAt: (node: Node<T>, entering: boolean) => {
-            current = node;
-            isEntering = entering;
-        },
-    };
+    return new Walker(root);
 }

@@ -588,7 +588,7 @@ describe('walkAST', () => {
         expect(walker.next()).toEqual(undefined);
     });
 
-    test('a tree with arbitrarily nested children should be valid', () => {
+    test('should walk through a tree with arbitrarily nested children', () => {
         const root = makeNode({name: 'root'});
         const a = makeNode({name: 'a'});
         const b = makeNode({name: 'b'});
@@ -662,6 +662,89 @@ describe('walkAST', () => {
         expect(walker).toWalkTo('root', false);
         expect(walker.hasNext()).toBe(false);
         expect(walker.next()).toEqual(undefined);
+    });
+
+    test('should be able to iterate through a tree with arbitrarily nested children', () => {
+        const root = makeNode({name: 'root'});
+        const a = makeNode({name: 'a'});
+        const b = makeNode({name: 'b'});
+        const c = makeNode({name: 'c'});
+        const d = makeNode({name: 'd'});
+        const e = makeNode({name: 'e'});
+        const f = makeNode({name: 'f'});
+        const g = makeNode({name: 'g'});
+        const h = makeNode({name: 'h'});
+        const i = makeNode({name: 'i'});
+        const j = makeNode({name: 'j'});
+        const k = makeNode({name: 'k'});
+        const l = makeNode({name: 'l'});
+
+        appendChild(root, a);
+        appendChild(root, b);
+        appendChild(root, c);
+        appendChild(a, d);
+        appendChild(d, e);
+        appendChild(d, f);
+        appendChild(a, g);
+        appendChild(g, h);
+        appendChild(h, i);
+        appendChild(a, j);
+        appendChild(c, k);
+        appendChild(k, l);
+
+        /*
+        - root
+            - a
+                - d
+                    - e
+                    - f
+                - g
+                    - h
+                        - i
+                - j
+            - b
+            - c
+                - k
+                    - l
+        */
+
+        const walker = walkAST(root);
+
+        const events = Array.from(walker).map((event) => ({
+            node: {
+                name: event.node.name,
+            },
+            entering: event.entering,
+        }));
+
+        expect(events).toEqual([
+            {node: {name: 'root'}, entering: true},
+            {node: {name: 'a'}, entering: true},
+            {node: {name: 'd'}, entering: true},
+            {node: {name: 'e'}, entering: true},
+            {node: {name: 'e'}, entering: false},
+            {node: {name: 'f'}, entering: true},
+            {node: {name: 'f'}, entering: false},
+            {node: {name: 'd'}, entering: false},
+            {node: {name: 'g'}, entering: true},
+            {node: {name: 'h'}, entering: true},
+            {node: {name: 'i'}, entering: true},
+            {node: {name: 'i'}, entering: false},
+            {node: {name: 'h'}, entering: false},
+            {node: {name: 'g'}, entering: false},
+            {node: {name: 'j'}, entering: true},
+            {node: {name: 'j'}, entering: false},
+            {node: {name: 'a'}, entering: false},
+            {node: {name: 'b'}, entering: true},
+            {node: {name: 'b'}, entering: false},
+            {node: {name: 'c'}, entering: true},
+            {node: {name: 'k'}, entering: true},
+            {node: {name: 'l'}, entering: true},
+            {node: {name: 'l'}, entering: false},
+            {node: {name: 'k'}, entering: false},
+            {node: {name: 'c'}, entering: false},
+            {node: {name: 'root'}, entering: false},
+        ]);
     });
 });
 
