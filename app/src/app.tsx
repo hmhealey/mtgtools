@@ -1,14 +1,14 @@
 import React, {FormEvent, useCallback, useEffect, useRef, useState} from 'react';
 
 import ScryfallClient from '@hmhealey/scryfall/client';
-import {Card, ImageType} from '@hmhealey/scryfall/types/card';
+import {Card} from '@hmhealey/scryfall/types/card';
 
-import CardImage from './components/card_image';
-import './App.css';
 import ScryfallWrapper from './components/scryfall_wrapper';
 import CardDetail from './layouts/card_detail';
 import ManaSymbol from './components/mana_symbol';
 import ManaCost from './components/mana_cost';
+
+import './app.css';
 
 export default function App() {
     const client = useRef(new ScryfallClient());
