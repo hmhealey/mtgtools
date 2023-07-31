@@ -5,5 +5,5 @@ module.exports = {
         '\\.css$': '<rootDir>/test/cssMock.js',
     },
     setupFilesAfterEnv: ['<rootDir>/test/setup.js'],
-    testEnvironment: 'jsdom',
+    testEnvironment: '<rootDir>/test/environment.ts',
 };

@@ -31,3 +31,12 @@
         -   Some values of the `include` option in `app/tsconfig.json` also seems to sometimes behave as if `disableSourceOfProjectReferenceRedirect` was enabled, but it's likely I wasn't using that setting correctly. I decided to not have it in `app/tsconfig.json`, but I added it to the Scryfall package one.
         -   Turning on `strict` in the Scryfall package seemed to work, but it didn't end up working reliably. There were also some cases where it completely disappeared from Intellisense, but maybe I was just confusing VS Code at that point. I left it on for the time being even if it did require some fighting with type checking `client.test.ts`.
         -   I also tried fighting with the Import Module Specifier setting in VS Code since that came up in various StackOverflow and GitHub Issues posts, but it didn't seem to have any effect on this. It seems like a lot of those posts are having the opposite problem where import paths include the `dist` directory instead of the `src` one which I'm seeing.
+
+## July 31, 2023
+
+-   The App package tests have been broken since I added `ScryfallWrapper` last time because using `fetch` in Jest is hard. Using the default `node` test environment uses Node.js's implementation, but that isn't provided in the `jsdom` environment. A big part of the reason for that is that Node's implementation isn't spec-compliant, but none of the other polyfills or implementations are either, so I may as well use the Node one. I copied [these instructions](https://github.com/jsdom/jsdom/issues/1724#issuecomment-1446858041) on how to add the Node one to the test environment.
+    -   I saw an older post that said Nock was unable to mock Node's implementation of `fetch`, so if I end up adding that, I'll likely need to switch to `node-fetch` or something similar for testing.
+    -   Links:
+        -   https://blog.logrocket.com/fetch-api-node-js/
+        -   https://github.com/jsdom/jsdom/issues/1724
+-   Related to the above, I may need to consider adding a mock of some sort for the tests since any component tests involving `ScryfallWrapper` hit the Scryfall API right now.
