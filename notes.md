@@ -57,3 +57,9 @@
         -   https://blog.logrocket.com/fetch-api-node-js/
         -   https://github.com/jsdom/jsdom/issues/1724
 -   Related to the above, I may need to consider adding a mock of some sort for the tests since any component tests involving `ScryfallWrapper` hit the Scryfall API right now.
+
+## February 10, 2024
+
+-   Last I worked on this, I was trying to render oracle text.
+    -   I had run into an issue with getting the node walker/renderer working because I didn't realize my walker behaved differently than the commonmark.js one. The commonmark.js one differentiates container nodes from others, and it only enters non-container nodes without exiting them. I don't understand why they did that, so instead of rewriting all of the walker code, I found a way to render it without doing that.
+    -   I found a way to do this without adding the React nodes onto the AST like commonmark-react-renderer does, so I should remember this approach for use at MM. It will require some changes because of the different walker semantics though because I don't think I want to bother porting that over as well.

@@ -23,11 +23,6 @@ type OracleNodeTypes =
     | {type: 'list_item'};
 export type OracleNode = Node<OracleNodeTypes>;
 
-export interface OracleWalker {
-    hasNext(): boolean;
-    next(): {node: OracleNode; entering: boolean};
-}
-
 export function tokenizeOracleText(text: string): OracleToken[] {
     const tokens: OracleToken[] = [
         {
