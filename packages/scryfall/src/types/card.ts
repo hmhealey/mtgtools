@@ -161,22 +161,25 @@ export enum Format {
     Standard = 'standard',
     Future = 'future',
     Historic = 'historic',
+    Timeless = 'timeless',
     Gladiator = 'gladiator',
     Pioneer = 'pioneer',
-    Exporer = 'explorer',
+    Explorer = 'explorer',
     Modern = 'modern',
     Legacy = 'legacy',
     Pauper = 'pauper',
     Vintage = 'vintage',
     Penny = 'penny',
     Commander = 'commander',
-    Brawl = 'brawl',
-    HistoricBrawl = 'historicbrawl',
+    Oathbreaker = 'oathbreaker',
+    StandardBrawl = 'standardbrawl',
+    HistoricBrawl = 'brawl',
     Alchemy = 'alchemy',
     PauperCommander = 'paupercommander',
     DuelCommander = 'duel',
     OldSchool = 'oldschool',
     Premodern = 'premodern',
+    Predh = 'predh',
 }
 
 export enum FrameEffect {
@@ -186,7 +189,7 @@ export enum FrameEffect {
     Draft = 'draft',
     Devoid = 'devoid',
     Tombstone = 'tombstone',
-    ColorShifted = 'colorshifted',
+    Colorshifted = 'colorshifted',
     Inverted = 'inverted',
     SunMoonDfc = 'sunmoondfc',
     CompassLandDfc = 'compasslanddfc',
@@ -203,6 +206,7 @@ export enum FrameEffect {
     ConvertDfc = 'convertdfc',
     FanDfc = 'fandfc',
     UpsideDownDfc = 'upsidedowndfc',
+    Spree = 'spree',
 }
 
 export enum FrameLayout {
