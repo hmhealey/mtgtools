@@ -23,6 +23,7 @@ export function makeEmptyGameState(): GameState {
 
 export type Player = {
     type: EntityType.Player;
+    id: string;
 
     // name: string;
 
@@ -94,6 +95,8 @@ export function isGameObject(entity: Entity): entity is GameObject {
 
 type BaseGameObject = {
     type: EntityType.Card | EntityType.Token;
+    id: string;
+
     card: Card;
 
     controller: Player;

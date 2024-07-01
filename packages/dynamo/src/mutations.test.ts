@@ -1,6 +1,6 @@
 import {produce} from 'immer';
 
-import {Card} from '@hmhealey/scryfall/types/card';
+import {grizzlyBears} from '@hmhealey/scryfall/test_data';
 
 import {EntityType, Zone, makeEmptyGameState} from './game_state';
 import {applyDamage, changeLife} from './mutations';
@@ -11,10 +11,12 @@ describe('changeLife', () => {
         state.players = [
             {
                 type: EntityType.Player,
+                id: 'player1',
                 life: 20,
             },
             {
                 type: EntityType.Player,
+                id: 'player2',
                 life: 20,
             },
         ];
@@ -36,6 +38,7 @@ describe('applyDamage', () => {
         state.players = [
             {
                 type: EntityType.Player,
+                id: 'player1',
                 life: 10,
             },
         ];
@@ -54,14 +57,16 @@ describe('applyDamage', () => {
         state.players = [
             {
                 type: EntityType.Player,
+                id: 'player1',
                 life: 20,
             },
         ];
         state.zones.battlefield = [
             {
                 type: EntityType.Card,
+                id: 'card1',
                 controller: state.players[0],
-                card: {type_line: 'Creature'} as Card,
+                card: grizzlyBears,
                 markedDamage: 0,
             },
         ];
