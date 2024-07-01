@@ -54,6 +54,7 @@ export type Card = {
 
     // Print Fields
     artist?: string;
+    artist_ids?: UUID[];
     attraction_lights?: number[];
     booster: boolean;
     border_color: BorderColor;
@@ -65,7 +66,7 @@ export type Card = {
     flavor_name?: string;
     flavor_text?: string;
     frame_effects?: FrameEffect[];
-    frame: FrameLayout;
+    frame: Frame;
     full_art: boolean;
     games: Game[];
     highres_image: boolean;
@@ -88,6 +89,8 @@ export type Card = {
     set_search_uri: URI;
     set_type: string;
     set_uri: URI;
+    set: string;
+    set_id: UUID;
     story_spotlight: boolean;
     textless: boolean;
     variation: boolean;
@@ -143,11 +146,12 @@ export function isCardFace(o: unknown): o is CardFace {
 }
 
 export type CardPrices = {
-    usd: string;
-    usd_foil: string;
-    usd_etched: string;
-    eur: string;
-    tix: string;
+    usd: string | null;
+    usd_foil: string | null;
+    usd_etched: string | null;
+    eur: string | null;
+    eur_foil: string | null;
+    tix: string | null;
 };
 
 export enum Finish {
@@ -180,6 +184,14 @@ export enum Format {
     OldSchool = 'oldschool',
     Premodern = 'premodern',
     Predh = 'predh',
+}
+
+export enum Frame {
+    Alpha = '1993',
+    Mirage = '1997',
+    EighthEdition = '2003',
+    Magic2015 = '2015',
+    Future = 'future',
 }
 
 export enum FrameEffect {
