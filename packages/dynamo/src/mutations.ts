@@ -1,66 +1,44 @@
+import {original} from 'immer';
 import {Entity, GameObject, GameState, Player, Zone, isCreatureObject, isPlayer} from './game_state';
 import {assert} from './utils';
 
-export function move(state: GameState, object: GameObject, from: Zone, to: Zone) {
-    const nextFromZone = [...state.zones[from]];
+export function move(object: GameObject, from: Zone, to: Zone) {
+    return (state: GameState) => {
+        const fromZone = state.zones[from];
 
-    const index = nextFromZone.indexOf(object);
-    assert(index !== -1, 'unable to move object from ' + from);
+        const index = fromZone.findIndex((o) => original(o) === object);
+        assert(index !== -1, 'unable to find object to move it from ' + from + ' to ' + to);
 
-    nextFromZone.splice(index, 1);
+        fromZone.splice(index, 1);
 
-    const nextToZone = [...state.zones[to]];
-    nextToZone.push(object);
+        const toZone = state.zones[to];
 
-    return {
-        ...state,
-        board: {
-            ...state.zones,
-            [from]: nextFromZone,
-            [to]: nextToZone,
-        },
+        toZone.push(object);
     };
 }
 
-export function changeLife(state: GameState, player: Player, amount: number) {
-    const nextPlayers = [...state.players];
+export function changeLife(player: Player, amount: number) {
+    return (state: GameState) => {
+        const index = state.players.findIndex((p) => original(p) === player);
+        assert(index !== -1, 'unable to find player to change their life total');
 
-    const index = nextPlayers.indexOf(player);
-    assert(index !== -1, 'unable to change life of player');
-
-    nextPlayers[index] = {
-        ...nextPlayers[index],
-        life: nextPlayers[index].life + amount,
-    };
-
-    return {
-        ...state,
-        players: nextPlayers,
+        state.players[index].life += amount;
     };
 }
 
-export function applyDamage(state: GameState, entity: Entity, amount: number) {
-    if (isPlayer(entity)) {
-        return changeLife(state, entity, -amount);
-    }
+export function applyDamage(entity: Entity, amount: number) {
+    return (state: GameState) => {
+        if (isPlayer(entity)) {
+            return changeLife(entity, -amount)(state);
+        }
 
-    const nextBattlefield = [...state.zones[Zone.Battlefield]];
+        const battlefield = state.zones[Zone.Battlefield];
 
-    const index = nextBattlefield.indexOf(entity);
-    assert(index !== -1, 'unable to find entity on battlefield to damage');
+        const index = battlefield.findIndex((e) => original(e) === entity);
+        assert(index !== -1, 'unable to find entity on battlefield to damage');
 
-    assert(isCreatureObject(entity));
+        assert(isCreatureObject(entity));
 
-    nextBattlefield[index] = {
-        ...nextBattlefield[index],
-        markedDamage: nextBattlefield[index].markedDamage + amount,
-    };
-
-    return {
-        ...state,
-        zones: {
-            ...state.zones,
-            [Zone.Battlefield]: nextBattlefield,
-        },
+        battlefield[index].markedDamage += amount;
     };
 }

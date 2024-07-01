@@ -48,44 +48,48 @@ anyDamageableTarget satisfies TargetFilter<Entity>;
 // effect definitions
 
 class Effect<ExtraParams extends any[]> {
-    constructor(private _apply: (GameState, ...ExtraParams) => GameState) {}
+    constructor(private _apply: (...ExtraParams) => (GameState) => GameState | void) {}
 }
 
 class TargetedEffect<T, ExtraParams extends any[]> {
     constructor(
         private _filter: TargetFilter<T, ExtraParams>,
-        private _apply: (GameState, T, ...ExtraParams) => GameState,
+        private _apply: (T, ...ExtraParams) => (GameState) => GameState | void,
     ) {}
 
-    public apply(state: GameState, target: Entity, ...extra: ExtraParams) {
-        const filteredTarget = this._filter(state, target, ...extra);
+    public apply(target: Entity, ...extra: ExtraParams) {
+        return (state: GameState) => {
+            const filteredTarget = this._filter(state, target, ...extra);
 
-        assert(filteredTarget, 'unably to apply effect to target');
+            assert(filteredTarget, 'unably to apply effect to target');
 
-        return this._apply(state, filteredTarget, ...extra);
+            return this._apply(filteredTarget, ...extra);
+        };
     }
 }
 
-const murder = new TargetedEffect(anyCreature, (state: GameState, target: GameObject) => {
-    return move(state, target, Zone.Battlefield, Zone.Graveyard);
+const murder = new TargetedEffect(anyCreature, (target: GameObject) => {
+    return move(target, Zone.Battlefield, Zone.Graveyard);
 });
-const doomBlade = new TargetedEffect(anyNonBlackCreature, (state: GameState, target: GameObject) => {
-    return move(state, target, Zone.Battlefield, Zone.Graveyard);
+const doomBlade = new TargetedEffect(anyNonBlackCreature, (target: GameObject) => {
+    return move(target, Zone.Battlefield, Zone.Graveyard);
 });
-const swordsToPlowshares = new TargetedEffect(anyCreature, (state: GameState, target: GameObject) => {
-    const controller = target.controller;
+const swordsToPlowshares = new TargetedEffect(anyCreature, (target: GameObject) => {
+    return (state: GameState) => {
+        const controller = target.controller;
 
-    state = move(state, target, Zone.Battlefield, Zone.Exile);
-    state = changeLife(state, controller, getPower(state, target));
-    return state;
+        move(target, Zone.Battlefield, Zone.Exile)(state);
+        changeLife(controller, getPower(state, target))(state);
+    };
 });
-const pathToExile = new TargetedEffect(anyCreature, (state: GameState, target: GameObject) => {
-    const controller = target.controller;
+const pathToExile = new TargetedEffect(anyCreature, (target: GameObject) => {
+    return (state: GameState) => {
+        const controller = target.controller;
 
-    state = move(state, target, Zone.Battlefield, Zone.Exile);
-    // state = searchForBasicTapped(state, controller); // TODO
-    return state;
+        move(target, Zone.Battlefield, Zone.Exile)(state);
+        // searchForBasicTapped(state, controller); // TODO
+    };
 });
-const lightningBolt = new TargetedEffect(anyDamageableTarget, (state: GameState, target: Entity) => {
-    return applyDamage(state, target, 3);
+const lightningBolt = new TargetedEffect(anyDamageableTarget, (target: Entity) => {
+    return applyDamage(target, 3);
 });

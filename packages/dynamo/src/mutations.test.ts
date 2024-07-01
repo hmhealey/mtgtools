@@ -1,3 +1,5 @@
+import {produce} from 'immer';
+
 import {Card} from '@hmhealey/scryfall/types/card';
 
 import {EntityType, Zone, makeEmptyGameState} from './game_state';
@@ -17,7 +19,7 @@ describe('changeLife', () => {
             },
         ];
 
-        const nextState = changeLife(state, state.players[0], -3);
+        const nextState = produce(state, changeLife(state.players[0], -3));
 
         expect(nextState).not.toBe(state);
         expect(nextState.players).not.toBe(state.players);
@@ -38,7 +40,7 @@ describe('applyDamage', () => {
             },
         ];
 
-        const nextState = applyDamage(state, state.players[0], 10);
+        const nextState = produce(state, applyDamage(state.players[0], 10));
 
         expect(nextState).not.toBe(state);
         expect(nextState.players).not.toBe(state.players);
@@ -64,7 +66,7 @@ describe('applyDamage', () => {
             },
         ];
 
-        const nextState = applyDamage(state, state.zones.battlefield[0], 2);
+        const nextState = produce(state, applyDamage(state.zones.battlefield[0], 2));
 
         expect(nextState).not.toBe(state);
         expect(nextState.players).toBe(state.players);

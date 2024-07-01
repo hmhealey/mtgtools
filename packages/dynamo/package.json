@@ -2,7 +2,8 @@
     "name": "@hmhealey/dynamo",
     "private": true,
     "dependencies": {
-        "@hmhealey/scryfall": "*"
+        "@hmhealey/scryfall": "*",
+        "immer": "^10.1.1"
     },
     "scripts": {
         "test": "jest --verbose",
