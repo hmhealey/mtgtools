@@ -12,6 +12,7 @@
     },
     "workspaces": [
         "app",
+        "packages/dynamo",
         "packages/f2f",
         "packages/scryfall"
     ],

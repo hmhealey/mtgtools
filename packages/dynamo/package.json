@@ -1,0 +1,11 @@
+{
+    "name": "@hmhealey/dynamo",
+    "private": true,
+    "dependencies": {
+        "@hmhealey/scryfall": "*"
+    },
+    "scripts": {
+        "test": "jest --verbose",
+        "clean": "rm -rf dist node_modules"
+    }
+}
