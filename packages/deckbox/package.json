@@ -1,0 +1,19 @@
+{
+    "name": "@hmhealey/deckbox",
+    "private": true,
+    "exports": {
+        "./*": "./dist/*.js"
+    },
+    "typesVersions": {
+        ">=3.1": {
+            "*": [
+                "./dist/*.d.ts"
+            ]
+        }
+    },
+    "scripts": {
+        "build": "tsc",
+        "clean": "rm -rf dist tsconfig.tsbuildinfo node_modules",
+        "test": "jest --verbose"
+    }
+}
